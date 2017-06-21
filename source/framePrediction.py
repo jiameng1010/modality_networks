@@ -9,6 +9,7 @@ import scipy.io as sio
 import tensorflow as tf
 import utility
 from keras import backend as K
+from keras import metrics
 
 import model_ini
 
@@ -82,6 +83,7 @@ input_shape = (img_rows, img_cols, 6)
 model = model_ini.model_init_binary(input_shape)
 
 model.compile(loss="categorical_crossentropy",
+              metrics=[metrics.categorical_accuracy],
               optimizer=keras.optimizers.Adadelta())
 
 #model.load_weights('./trained_models/model_epoch_3.hdf5')

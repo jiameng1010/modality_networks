@@ -81,9 +81,8 @@ def loadData(index, index_begin, batchSize, path, image_mean):
 def loadData_binary(index, index_begin, batchSize, path, image_mean):
     x = np.empty(shape=(batchSize, 448, 640, 6))
     yy = np.empty(shape=(448, 640))
-    yy_NA = np.ones(shape=(448, 640), dtype='float32')
-    yy_close = np.ones(shape=(448, 640), dtype='float32')
-    yy_far = np.ones(shape=(448, 640), dtype='float32')
+    yy_NA = np.zeros(shape=(448, 640), dtype='float32')
+    yy_far = np.zeros(shape=(448, 640), dtype='float32')
     y1 = np.empty(shape=(batchSize, 224, 320, 3))
     y2 = np.empty(shape=(batchSize, 112, 160, 3))
     y3 = np.empty(shape=(batchSize, 56, 80, 3))
@@ -99,32 +98,32 @@ def loadData_binary(index, index_begin, batchSize, path, image_mean):
         yy = xx['Data']['depth'][0][0][0][0][16:464,:]
         yy = yy.astype('float32')
         ind_NA = yy[:,:] == 0
-        ind_close = yy[:,:] < 2
         ind_far = yy[:,:] > 2
-        yy_NA[ind_NA] = 0
-        yy_far[ind_close] = 0
-        yy_close[ind_far] = 0
+        yy_NA[ind_NA] = 1
+        yy_far[ind_far] = 1
 
-        y1[i, :, :, 0] = cv2.pyrDown(yy_NA)
-        y2[i, :, :, 0] = cv2.pyrDown(y1[i, :, :, 0])
-        y3[i, :, :, 0] = cv2.pyrDown(y2[i, :, :, 0])
-        y4[i, :, :, 0] = cv2.pyrDown(y3[i, :, :, 0])
-        y5[i, :, :, 0] = cv2.pyrDown(y4[i, :, :, 0])
-        y6[i, :, :, 0] = cv2.pyrDown(y5[i, :, :, 0])
+        #NA
+        y1[i, :, :, 0] = cv2.threshold(cv2.pyrDown(yy_NA), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y2[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y1[i, :, :, 0]), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y3[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y2[i, :, :, 0]), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y4[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y3[i, :, :, 0]), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y5[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y4[i, :, :, 0]), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y6[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y5[i, :, :, 0]), 0.5, 1, cv2.THRESH_BINARY)[1]
 
-        y1[i, :, :, 1] = cv2.pyrDown(yy_close)
-        y2[i, :, :, 1] = cv2.pyrDown(y1[i, :, :, 1])
-        y3[i, :, :, 1] = cv2.pyrDown(y2[i, :, :, 1])
-        y4[i, :, :, 1] = cv2.pyrDown(y3[i, :, :, 1])
-        y5[i, :, :, 1] = cv2.pyrDown(y4[i, :, :, 1])
-        y6[i, :, :, 1] = cv2.pyrDown(y5[i, :, :, 1])
+        #far
+        y1[i, :, :, 1] = cv2.threshold(cv2.pyrDown(yy_far), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y2[i, :, :, 1] = cv2.threshold(cv2.pyrDown(y1[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y3[i, :, :, 1] = cv2.threshold(cv2.pyrDown(y2[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y4[i, :, :, 1] = cv2.threshold(cv2.pyrDown(y3[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y5[i, :, :, 1] = cv2.threshold(cv2.pyrDown(y4[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y6[i, :, :, 1] = cv2.threshold(cv2.pyrDown(y5[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
 
-        y1[i, :, :, 2] = cv2.pyrDown(yy_far)
-        y2[i, :, :, 2] = cv2.pyrDown(y1[i, :, :, 2])
-        y3[i, :, :, 2] = cv2.pyrDown(y2[i, :, :, 2])
-        y4[i, :, :, 2] = cv2.pyrDown(y3[i, :, :, 2])
-        y5[i, :, :, 2] = cv2.pyrDown(y4[i, :, :, 2])
-        y6[i, :, :, 2] = cv2.pyrDown(y5[i, :, :, 2])
+    y1[:, :, :, 2] = np.ones_like(y1[:, :, :, 0]) - y1[:, :, :, 0] - y1[:, :, :, 1]
+    y2[:, :, :, 2] = np.ones_like(y2[:, :, :, 0]) - y2[:, :, :, 0] - y2[:, :, :, 1]
+    y3[:, :, :, 2] = np.ones_like(y3[:, :, :, 0]) - y3[:, :, :, 0] - y3[:, :, :, 1]
+    y4[:, :, :, 2] = np.ones_like(y4[:, :, :, 0]) - y4[:, :, :, 0] - y4[:, :, :, 1]
+    y5[:, :, :, 2] = np.ones_like(y5[:, :, :, 0]) - y5[:, :, :, 0] - y5[:, :, :, 1]
+    y6[:, :, :, 2] = np.ones_like(y6[:, :, :, 0]) - y6[:, :, :, 0] - y6[:, :, :, 1]
 
     x = x.astype('float32')
     x /= 255
