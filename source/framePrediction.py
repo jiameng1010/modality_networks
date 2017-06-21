@@ -79,9 +79,9 @@ img_rows, img_cols = 448, 640
 input_shape = (img_rows, img_cols, 6)
 
 # initialize the model
-model = model_ini.model_init(input_shape)
+model = model_ini.model_init_binary(input_shape)
 
-model.compile(loss=utility.my_loss,
+model.compile(loss="categorical_crossentropy",
               optimizer=keras.optimizers.Adadelta())
 
 #model.load_weights('./trained_models/model_epoch_3.hdf5')
@@ -95,8 +95,8 @@ loss = np.empty(shape=(40, 7))
 
 for i in range(4, 40):
 
-    history = model.fit_generator(utility.data_generator(isTrain = True, isGAN = False, batchSize = 10), steps_per_epoch = 4000, epochs = 1)
-    loss[i] = model.evaluate_generator(utility.data_generator(isTrain = False, isGAN = False, batchSize = 20), steps = 250)
+    history = model.fit_generator(utility.data_generator(isTrain = True, isGAN = False, isBinary=True, batchSize = 10), steps_per_epoch = 4000, epochs = 1)
+    loss[i] = model.evaluate_generator(utility.data_generator(isTrain = False, isGAN = False, isBinary=True, batchSize = 20), steps = 250)
     filename = './trained_models/model_epoch_' + str(i) + '.hdf5'
     model.save_weights(filename)
     filename = './trained_models/model_epoch_train' + str(i)
