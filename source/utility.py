@@ -77,6 +77,62 @@ def loadData(index, index_begin, batchSize, path, image_mean):
 
     return (x,y)
 
+
+def loadData_binary(index, index_begin, batchSize, path, image_mean):
+    x = np.empty(shape=(batchSize, 448, 640, 6))
+    yy = np.empty(shape=(448, 640))
+    yy_NA = np.ones(shape=(448, 640), dtype='float32')
+    yy_close = np.ones(shape=(448, 640), dtype='float32')
+    yy_far = np.ones(shape=(448, 640), dtype='float32')
+    y1 = np.empty(shape=(batchSize, 224, 320, 3))
+    y2 = np.empty(shape=(batchSize, 112, 160, 3))
+    y3 = np.empty(shape=(batchSize, 56, 80, 3))
+    y4 = np.empty(shape=(batchSize, 28, 40, 3))
+    y5 = np.empty(shape=(batchSize, 14, 20, 3))
+    y6 = np.empty(shape=(batchSize, 7, 10, 3))
+    for i in range(batchSize):
+        number_of_file = str(index[index_begin+i][0])
+        filename = path + number_of_file.zfill(7) + '.mat'
+        xx = sio.loadmat(filename)
+        x[i,:,:,0:3] = xx['Data']['image'][0][0][0][0][16:464,:,:] - image_mean      #for evaluate the monocular
+        x[i,:,:,3:6] = xx['Data']['image'][0][0][0][1][16:464,:,:] - image_mean
+        yy = xx['Data']['depth'][0][0][0][0][16:464,:]
+        yy = yy.astype('float32')
+        ind_NA = yy[:,:] == 0
+        ind_close = yy[:,:] < 2
+        ind_far = yy[:,:] > 2
+        yy_NA[ind_NA] = 0
+        yy_far[ind_close] = 0
+        yy_close[ind_far] = 0
+
+        y1[i, :, :, 0] = cv2.pyrDown(yy_NA)
+        y2[i, :, :, 0] = cv2.pyrDown(y1[i, :, :, 0])
+        y3[i, :, :, 0] = cv2.pyrDown(y2[i, :, :, 0])
+        y4[i, :, :, 0] = cv2.pyrDown(y3[i, :, :, 0])
+        y5[i, :, :, 0] = cv2.pyrDown(y4[i, :, :, 0])
+        y6[i, :, :, 0] = cv2.pyrDown(y5[i, :, :, 0])
+
+        y1[i, :, :, 1] = cv2.pyrDown(yy_close)
+        y2[i, :, :, 1] = cv2.pyrDown(y1[i, :, :, 1])
+        y3[i, :, :, 1] = cv2.pyrDown(y2[i, :, :, 1])
+        y4[i, :, :, 1] = cv2.pyrDown(y3[i, :, :, 1])
+        y5[i, :, :, 1] = cv2.pyrDown(y4[i, :, :, 1])
+        y6[i, :, :, 1] = cv2.pyrDown(y5[i, :, :, 1])
+
+        y1[i, :, :, 2] = cv2.pyrDown(yy_far)
+        y2[i, :, :, 2] = cv2.pyrDown(y1[i, :, :, 2])
+        y3[i, :, :, 2] = cv2.pyrDown(y2[i, :, :, 2])
+        y4[i, :, :, 2] = cv2.pyrDown(y3[i, :, :, 2])
+        y5[i, :, :, 2] = cv2.pyrDown(y4[i, :, :, 2])
+        y6[i, :, :, 2] = cv2.pyrDown(y5[i, :, :, 2])
+
+    x = x.astype('float32')
+    x /= 255
+    y = [y6, y5, y4, y3, y2, y1]
+
+    return (x,y)
+
+
 def train_GAN_epoch(model_d, generator, isTrain, batchSize = 10, steps=10):
     record = [0, 0]
     image_mean = np.zeros(shape=(448, 640, 3))
@@ -155,7 +211,7 @@ def fake_generator(isTrain, depth_generator, batchSize = 10):
 
 
 
-def data_generator(isTrain = True, isGAN = True, batchSize = 10):
+def data_generator(isTrain = True, isGAN = True, isBinary = False, batchSize = 10):
     image_mean = np.zeros(shape=(448, 640, 3))
     image_mean[:,:,0] = 114*np.ones(shape=(448, 640))
     image_mean[:,:,1] = 105*np.ones(shape=(448, 640))
@@ -174,7 +230,10 @@ def data_generator(isTrain = True, isGAN = True, batchSize = 10):
         if isGAN:
             yield loadDataGAN(index, i, batchSize, path, image_mean)
         else:
-            yield loadData(index, i, batchSize, path, image_mean)
+            if isBinary:
+                yield loadData_binary(index, i, batchSize, path, image_mean)
+            else:
+                yield loadData(index, i, batchSize, path, image_mean)
         i = i + batchSize
 
 
