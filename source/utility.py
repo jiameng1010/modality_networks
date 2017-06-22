@@ -104,11 +104,11 @@ def loadData_binary(index, index_begin, batchSize, path, image_mean):
 
         #NA
         y1[i, :, :, 0] = cv2.threshold(cv2.pyrDown(yy_NA), 0.5, 1, cv2.THRESH_BINARY)[1]
-        y2[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y1[i, :, :, 0]), 0.5, 1, cv2.THRESH_BINARY)[1]
-        y3[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y2[i, :, :, 0]), 0.5, 1, cv2.THRESH_BINARY)[1]
-        y4[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y3[i, :, :, 0]), 0.5, 1, cv2.THRESH_BINARY)[1]
-        y5[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y4[i, :, :, 0]), 0.5, 1, cv2.THRESH_BINARY)[1]
-        y6[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y5[i, :, :, 0]), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y2[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y1[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
+        y3[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y2[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
+        y4[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y3[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
+        y5[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y4[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
+        y6[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y5[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
 
         #far
         y1[i, :, :, 1] = cv2.threshold(cv2.pyrDown(yy_far), 0.5, 1, cv2.THRESH_BINARY)[1]
@@ -118,12 +118,32 @@ def loadData_binary(index, index_begin, batchSize, path, image_mean):
         y5[i, :, :, 1] = cv2.threshold(cv2.pyrDown(y4[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
         y6[i, :, :, 1] = cv2.threshold(cv2.pyrDown(y5[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
 
-    y1[:, :, :, 2] = np.ones_like(y1[:, :, :, 0]) - y1[:, :, :, 0] - y1[:, :, :, 1]
-    y2[:, :, :, 2] = np.ones_like(y2[:, :, :, 0]) - y2[:, :, :, 0] - y2[:, :, :, 1]
-    y3[:, :, :, 2] = np.ones_like(y3[:, :, :, 0]) - y3[:, :, :, 0] - y3[:, :, :, 1]
-    y4[:, :, :, 2] = np.ones_like(y4[:, :, :, 0]) - y4[:, :, :, 0] - y4[:, :, :, 1]
-    y5[:, :, :, 2] = np.ones_like(y5[:, :, :, 0]) - y5[:, :, :, 0] - y5[:, :, :, 1]
-    y6[:, :, :, 2] = np.ones_like(y6[:, :, :, 0]) - y6[:, :, :, 0] - y6[:, :, :, 1]
+        #close
+        y1[i, :, :, 2] = np.ones_like(y1[i, :, :, 1]) - y1[i, :, :, 1]
+        y2[i, :, :, 2] = np.ones_like(y2[i, :, :, 1]) - y2[i, :, :, 1]
+        y3[i, :, :, 2] = np.ones_like(y3[i, :, :, 1]) - y3[i, :, :, 1]
+        y4[i, :, :, 2] = np.ones_like(y4[i, :, :, 1]) - y4[i, :, :, 1]
+        y5[i, :, :, 2] = np.ones_like(y5[i, :, :, 1]) - y5[i, :, :, 1]
+        y6[i, :, :, 2] = np.ones_like(y6[i, :, :, 1]) - y6[i, :, :, 1]
+
+    ind_na = y1[:,:,:,0] == 1
+    y1[ind_na, 1] = 0
+    y1[ind_na, 2] = 0
+    ind_na = y2[:,:,:,0] == 1
+    y2[ind_na, 1] = 0
+    y2[ind_na, 2] = 0
+    ind_na = y3[:,:,:,0] == 1
+    y3[ind_na, 1] = 0
+    y3[ind_na, 2] = 0
+    ind_na = y4[:,:,:,0] == 1
+    y4[ind_na, 1] = 0
+    y4[ind_na, 2] = 0
+    ind_na = y5[:,:,:,0] == 1
+    y5[ind_na, 1] = 0
+    y5[ind_na, 2] = 0
+    ind_na = y6[:,:,:,0] == 1
+    y6[ind_na, 1] = 0
+    y6[ind_na, 2] = 0
 
     x = x.astype('float32')
     x /= 255
