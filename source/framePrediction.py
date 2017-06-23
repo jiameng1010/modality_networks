@@ -93,9 +93,9 @@ model.compile(loss="categorical_crossentropy",
   #  filename = './trained_models/model_epoch_' + str(i) + '.hdf5'
    # model.save_weights(filename)
 #plot_model(model, to_file='./trained_models/model.png')
-loss = np.empty(shape=(40, 7))
+loss = np.empty(shape=(40, 13))
 
-for i in range(4, 40):
+for i in range(1, 40):
 
     history = model.fit_generator(utility.data_generator(isTrain = True, isGAN = False, isBinary=True, batchSize = 10), steps_per_epoch = 4000, epochs = 1)
     loss[i] = model.evaluate_generator(utility.data_generator(isTrain = False, isGAN = False, isBinary=True, batchSize = 20), steps = 250)
@@ -107,4 +107,4 @@ for i in range(4, 40):
     np.save(filename, loss[i])
 
 print('\n')
-np.save('./trained_models/loss', loss)
+np.save('../../exp_data/trained_models/loss', loss)
