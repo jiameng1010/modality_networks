@@ -98,7 +98,7 @@ def loadData_binary(index, index_begin, batchSize, path, image_mean):
         yy = xx['Data']['depth'][0][0][0][0][16:464,:]
         yy = yy.astype('float32')
         ind_NA = yy[:,:] == 0
-        ind_far = yy[:,:] > 2
+        ind_far = yy[:,:] > 4
         yy_NA[ind_NA] = 1
         yy_far[ind_far] = 1
 
