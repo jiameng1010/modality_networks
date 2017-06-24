@@ -82,7 +82,7 @@ input_shape = (img_rows, img_cols, 6)
 # initialize the model
 model = model_ini.model_init_binary(input_shape)
 
-model.compile(loss="sparse_categorical_crossentropy",
+model.compile(loss="categorical_crossentropy",
               metrics=[metrics.categorical_accuracy],
               optimizer=keras.optimizers.Adadelta())
 
