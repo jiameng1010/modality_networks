@@ -6,7 +6,7 @@ curve_val = np.empty(shape=(40))
 for i in range(40):
     curve_train[i] = 0
     curve_val[i] = 0
-for i in range(1, 5):
+for i in range(1, 26):
     filetrain = './trained_models/model_epoch_train' + str(i) + '.npy'
     fileval = './trained_models/model_epoch_val' + str(i) + '.npy'
     loss_train = np.load(filetrain)
