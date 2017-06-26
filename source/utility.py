@@ -62,14 +62,27 @@ def loadData(index, index_begin, batchSize, path, image_mean):
         x[i,:,:,3:6] = xx['Data']['image'][0][0][0][1][16:464,:,:] - image_mean
         yy = xx['Data']['depth'][0][0][0][1][16:464,:]
         yy = yy.astype('float32')
-        #ind = yy[:,:] < 2
-        #yy[ind] = 0
+        ind = yy[:,:] < 2.5
+        yy[ind] = 0
         y1[i, :, :, 0] = cv2.pyrDown(yy)
         y2[i, :, :, 0] = cv2.pyrDown(y1[i, :, :, 0])
         y3[i, :, :, 0] = cv2.pyrDown(y2[i, :, :, 0])
         y4[i, :, :, 0] = cv2.pyrDown(y3[i, :, :, 0])
         y5[i, :, :, 0] = cv2.pyrDown(y4[i, :, :, 0])
         y6[i, :, :, 0] = cv2.pyrDown(y5[i, :, :, 0])
+
+    ind_zero = y1[:,:,:,:] < 2
+    y1[ind_zero] = 0
+    ind_zero = y2[:,:,:,:] < 2
+    y2[ind_zero] = 0
+    ind_zero = y3[:,:,:,:] < 2
+    y3[ind_zero] = 0
+    ind_zero = y4[:,:,:,:] < 2
+    y4[ind_zero] = 0
+    ind_zero = y5[:,:,:,:] < 2
+    y5[ind_zero] = 0
+    ind_zero = y6[:,:,:,:] < 2
+    y6[ind_zero] = 0
 
     x = x.astype('float32')
     x /= 255
