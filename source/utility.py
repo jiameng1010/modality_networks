@@ -270,11 +270,20 @@ def data_generator(isTrain = True, isGAN = True, isBinary = False, batchSize = 1
 
 
 
+def zero_mask(y):
+    return tf.to_float(K.not_equal(K.zeros_like(y), y))
+
+def zero_mask_inv(y):
+    return tf.to_float(K.equal(K.zeros_like(y), y))
+
 def my_loss(y_true, y_pred):
     return K.mean(tf.multiply(K.square(y_pred - y_true), tf.to_float(K.not_equal(K.zeros_like(y_true), y_true))))
 
 def metric_L1_real(y_true, y_pred):
-    return K.mean(tf.div(tf.multiply(K.abs(y_pred-y_true), y_true), tf.add(K.square(y_true), 1e-9*tf.ones_like(y_true))))
+    return K.mean(tf.realdiv(tf.multiply(K.abs(y_pred-y_true), zero_mask(y_true)), tf.add(y_true, zero_mask_inv(y_true))))
+
+def metric_L1_inv(y_true, y_pred):
+    return K.mean(K.abs(tf.realdiv(zero_mask(y_true), y_pred) - tf.realdiv(zero_mask(y_true), tf.add(y_true, zero_mask_inv(y_true)))))
 
 def copy_weights(model, d):
     for i in range(6):
