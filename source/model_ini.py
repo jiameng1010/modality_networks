@@ -1,6 +1,6 @@
 from keras.models import Sequential
 from keras.layers import ZeroPadding2D
-from keras.layers import Conv2D, UpSampling2D, add, multiply, core
+from keras.layers import Conv2D, UpSampling2D, multiply, core
 from keras.layers import Input, Conv2DTranspose, concatenate, Activation, Dense
 from keras.layers.merge import Multiply, Add
 from keras.models import Model
