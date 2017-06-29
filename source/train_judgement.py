@@ -18,7 +18,6 @@ val_path = '/media/mjia/Data/SUN3D/val/'
 # input image dimensions
 img_rows, img_cols = 448, 640
 input_shape = (img_rows, img_cols, 6)
-depth_shape = (img_rows, img_cols, 1)
 
 # initialize the models
 model_judge = model_ini.model_judgement(input_shape)
@@ -38,3 +37,19 @@ model_judge.compile(loss=utility.my_loss,
 ########################################### main ##################################################################
 ########################################### main ##################################################################
 ########################################### main ##################################################################
+
+loss = np.empty(shape=(40, 13))
+
+for i in range(1, 40):
+
+    history = model_judge.fit_generator(utility.judgement_generator(isTrain = True, batchSize = 10), steps_per_epoch = 4000, epochs = 1)
+    loss[i] = model_judge.evaluate_generator(utility.judgement_generator(isTrain = False, batchSize = 20), steps = 250)
+    filename = '../../exp_data/trained_models/model_epoch_' + str(i) + '.hdf5'
+    model_judge.save_weights(filename)
+    filename = '../../exp_data/trained_models/model_epoch_train' + str(i)
+    np.save(filename, history.history)
+    filename = '../../exp_data/trained_models/model_epoch_val' + str(i)
+    np.save(filename, loss[i])
+
+print('\n')
+np.save('../../exp_data/trained_models/loss', loss)

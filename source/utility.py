@@ -45,6 +45,36 @@ def loadDataGAN(index, index_begin, batchSize, path, image_mean):
 
     return (x,y)
 
+def loadData_judgement(index, index_begin, batchSize, path, image_mean):
+    x = np.empty(shape=(batchSize, 448, 640, 6))
+    x1 = np.empty(shape=(batchSize, 224, 320, 1))
+    x2 = np.empty(shape=(batchSize, 224, 320, 1))
+    yy = np.empty(shape=(448, 640))
+    y1 = np.empty(shape=(batchSize, 224, 320, 1))
+    for i in range(batchSize):
+        number_of_file = str(index[index_begin+i][0])
+        filename = path + number_of_file.zfill(7) + '.mat'
+        xx = sio.loadmat(filename)
+        x[i,:,:,0:3] = xx['Data']['image'][0][0][0][0][16:464,:,:] - image_mean      #for evaluate the monocular
+        x[i,:,:,3:6] = xx['Data']['image'][0][0][0][1][16:464,:,:] - image_mean
+        yy = xx['Data']['depth'][0][0][0][1][16:464,:]
+        yy = yy.astype('float32')
+        ind = yy[:,:] > 3
+        yy[ind] = 0
+        y1[i, :, :, 0] = cv2.pyrDown(yy)
+
+        filename = path[:-1] + '_pr/' + number_of_file.zfill(7) + '.npy'
+        xx = np.load(filename)
+        x1[i,:,:,:] = xx[0]
+        x2[i,:,:,:] = xx[1]
+
+    ind_zero = y1[:,:,:,:] < 0.3
+    y1[ind_zero] = 0
+    x = x.astype('float32')
+    x /= 255
+
+    return ([x, x1, x2], y1)
+
 def loadData(index, index_begin, batchSize, path, image_mean):
     x = np.empty(shape=(batchSize, 448, 640, 6))
     yy = np.empty(shape=(448, 640))
@@ -241,6 +271,24 @@ def fake_generator(isTrain, depth_generator, batchSize = 10):
         yield ([y6, y5, y4, y3, y2, y1], gt)
         i = i + batchSize
 
+
+def judgement_generator(isTrain = True, batchSize = 10):
+    image_mean = np.zeros(shape=(448, 640, 3))
+    image_mean[:,:,0] = 114*np.ones(shape=(448, 640))
+    image_mean[:,:,1] = 105*np.ones(shape=(448, 640))
+    image_mean[:,:,2] = 97*np.ones(shape=(448, 640))
+    if isTrain:
+        path = train_path
+        index = [[i] for i in range(1,trainn)]
+        shuffle(index)
+    else:
+        index = [[i] for i in range(1,val)]
+        shuffle(index)
+        path = val_path
+
+    i = 0
+    while(True):
+        yield loadData_judgement(index, i, batchSize, path, image_mean)
 
 
 def data_generator(isTrain = True, isGAN = True, isBinary = False, batchSize = 10):

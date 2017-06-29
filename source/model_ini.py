@@ -172,8 +172,8 @@ def model_judgement(input_shape):
     # model.add(Dense(128, activation='relu'))
     # model.add(Dropout(0.5))
     # model.add(Dense(10, activation='softmax'))
-    close = Input(shape=(224, 320))
-    far = Input(shape=(224, 320))
+    close = Input(shape=(224, 320, 1))
+    far = Input(shape=(224, 320, 1))
 
     a = Input(shape=input_shape)
     conv1 = Conv2D(filters=64, kernel_size=(7, 7), strides=(2, 2), padding="same", activation='relu')(a)
@@ -230,8 +230,8 @@ def model_judgement(input_shape):
     pr1 = Conv2D(filters=3, kernel_size=(3, 3), strides=(1, 1), padding="same", activation='softmax')(iconv1)
     # pr1b = Activation(K.softmax)(pr1)
 
-    far_w = core.Lambda(lambda x: x[:, :, :, 1])(pr1)
-    close_w = core.Lambda(lambda x: x[:, :, :, 2])(pr1)
+    far_w = core.Lambda(lambda x: x[:, :, :, 1:2])(pr1)
+    close_w = core.Lambda(lambda x: x[:, :, :, 2:3])(pr1)
 
     far_ww = Multiply()([far_w, far])
     close_ww = Multiply()([close_w, close])
@@ -239,7 +239,7 @@ def model_judgement(input_shape):
     #pre = core.Lambda(judgement_merge(pr1[:,:,:,1], far, pr1[:,:,:,2], close), output_shape=(1,))
     #pre = MyLayer()([pr1[:,:,:,1], far, pr1[:,:,:,2], close])
 
-    model = Model(inputs=[a, close, far], outputs=[pre, pr1])
+    model = Model(inputs=[a, far, close], outputs=pre)
 
     return model
 
