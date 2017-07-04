@@ -23,7 +23,7 @@ input_shape = (img_rows, img_cols, 6)
 model_judge = model_ini.model_judgement(input_shape)
 
 # compile the models
-model_judge.compile(loss=utility.my_loss,
+model_judge.compile(loss=keras.Loss.mean_squared_error,
                   metrics=[utility.metric_L1_real],
                   optimizer=keras.optimizers.Adadelta())
 

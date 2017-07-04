@@ -71,7 +71,7 @@ model_far.compile(loss=utility.my_loss,
 
 model_close.load_weights('./trained_models/model_close.hdf5')
 model_far.load_weights('./trained_models/model_far.hdf5')
-model_judge.load_weights('./trained_models/model_judge.hdf5')
+model_judge.load_weights('./trained_models/model_epoch_14.hdf5')
 #loss = model.evaluate_generator(utility.data_generator(isTrain = False, isGAN= False, batchSize = 20), steps = 255)
 
 x = np.empty(shape=(1, 448, 640, 6))
