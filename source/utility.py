@@ -59,8 +59,6 @@ def loadData_judgement(index, index_begin, batchSize, path, image_mean):
         x[i,:,:,3:6] = xx['Data']['image'][0][0][0][1][16:464,:,:] - image_mean
         yy = xx['Data']['depth'][0][0][0][1][16:464,:]
         yy = yy.astype('float32')
-        ind = yy[:,:] > 3
-        yy[ind] = 0
         y1[i, :, :, 0] = cv2.pyrDown(yy)
 
         filename = path[:-1] + '_pr/' + number_of_file.zfill(7) + '.npy'
