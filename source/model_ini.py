@@ -244,5 +244,18 @@ def model_judgement(input_shape):
     return model
 
 
+def model_overall(model_close, model_far, model_judgement):
+    model_input = Input(shape=(448, 640, 6))
+
+    far = model_far(model_input)
+    close = model_close(model_input)
+
+    model_output = model_judgement([model_input, far[5], close[5]])
+
+    model = Model(inputs=model_input, outputs=model_output)
+
+    return model
+
+
 
 
