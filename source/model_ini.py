@@ -230,8 +230,8 @@ def model_judgement(input_shape):
     pr1 = Conv2D(filters=2, kernel_size=(3, 3), strides=(1, 1), padding="same", activation='softmax')(iconv1)
     # pr1b = Activation(K.softmax)(pr1)
 
-    far_w = core.Lambda(lambda x: x[:, :, :, 1:2])(pr1)
-    close_w = core.Lambda(lambda x: x[:, :, :, 2:3])(pr1)
+    far_w = core.Lambda(lambda x: x[:, :, :, 0:1])(pr1)
+    close_w = core.Lambda(lambda x: x[:, :, :, 1:2])(pr1)
 
     far_ww = Multiply()([far_w, far])
     close_ww = Multiply()([close_w, close])

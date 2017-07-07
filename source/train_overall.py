@@ -23,14 +23,21 @@ model_overall = model_ini.model_overall(model_close, model_far, model_judge)
 # load pre-trained
 model_close.load_weights('./trained_models/model_close.hdf5')
 model_far.load_weights('./trained_models/model_far.hdf5')
-model_judge.load_weights('./trained_models/model_judge.hdf5')
+#model_judge.load_weights('./trained_models/model_judge.hdf5')
 
 # compile the models
+model_close.compile(loss=utility.my_loss,
+                  metrics=[utility.metric_L1_real],
+                  optimizer=keras.optimizers.Adadelta())
+model_far.compile(loss=utility.my_loss,
+                  metrics=[utility.metric_L1_real],
+                  optimizer=keras.optimizers.Adadelta())
+model_judge.compile(loss=utility.my_loss,
+                  metrics=[utility.metric_L1_real],
+                  optimizer=keras.optimizers.Adadelta())
 model_overall.compile(loss=utility.my_loss,
                   metrics=[utility.metric_L1_real],
                   optimizer=keras.optimizers.Adadelta())
-
-loss = np.empty(shape=(40, 2))
 
 for i in range(1, 40):
 
