@@ -1,6 +1,8 @@
 from __future__ import print_function
 
+from random import shuffle
 import keras
+import utility
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.io as sio
@@ -44,32 +46,35 @@ def showImange(x, yy, depth, batchSize):
         img[i][:,320:640,0] = 30*np.float32(yy)
         img[i][:,320:640,1] = 30*np.float32(yy)
         img[i][:,320:640,2] = 30*np.float32(yy)
-        img[i][:,640:960,0] = 30*depth[5][i][:,:,0]
-        img[i][:,640:960,1] = 30*depth[5][i][:,:,0]
-        img[i][:,640:960,2] = 30*depth[5][i][:,:,0]
+        img[i][:,640:960,0] = 30*depth[i][:,:,0]
+        img[i][:,640:960,1] = 30*depth[i][:,:,0]
+        img[i][:,640:960,2] = 30*depth[i][:,:,0]
         imgtoshow = Image.fromarray(np.uint8(img[i]), 'RGB')
         return imgtoshow
 
 # initialize the model
 img_rows, img_cols = 448, 640
 input_shape = (img_rows, img_cols, 6)
-model = model_ini.model_init(input_shape)
+model_close = model_ini.model_init(input_shape)
+model_far = model_ini.model_init(input_shape)
+model_judge = model_ini.model_judgement(input_shape)
+model_overall = model_ini.model_overall(model_close, model_far, model_judge)
 
-model.compile(loss=my_loss,
-              metrics=[metric_L1_inv, metric_L1_real],
-              optimizer=keras.optimizers.Adadelta())
+model_overall.compile(loss=utility.my_loss,
+                  metrics=[utility.metric_L1_real],
+                  optimizer=keras.optimizers.Adadelta())
 
-model.load_weights('./trained_models/model_epoch_8.hdf5')
+model_overall.load_weights('./trained_models/model_epoch_5.hdf5')
 #loss = model.evaluate_generator(utility.data_generator(isTrain = False, isGAN= False, batchSize = 20), steps = 255)
 
 x = np.empty(shape=(1, 448, 640, 6))
-image_mean = np.zeros(shape=(448, 640, 6))
+image_mean = np.zeros(shape=(448, 640, 3))
 image_mean[:, :, 0] = 114 * np.ones(shape=(448, 640))
 image_mean[:, :, 1] = 105 * np.ones(shape=(448, 640))
 image_mean[:, :, 2] = 97 * np.ones(shape=(448, 640))
-image_mean[:, :, 3] = 114 * np.ones(shape=(448, 640))
-image_mean[:, :, 4] = 105 * np.ones(shape=(448, 640))
-image_mean[:, :, 5] = 97 * np.ones(shape=(448, 640))
+#image_mean[:, :, 3] = 114 * np.ones(shape=(448, 640))
+#image_mean[:, :, 4] = 105 * np.ones(shape=(448, 640))
+#image_mean[:, :, 5] = 97 * np.ones(shape=(448, 640))
 #my_video = cv2.VideoWriter(filename='video.avi', fourcc=cv2.VideoWriter_fourcc('M','J','P','G'), fps=10, frameSize=(224, 960), isColor=True)
 
 #for i in range(1, 20):
@@ -86,32 +91,14 @@ image_mean[:, :, 5] = 97 * np.ones(shape=(448, 640))
 #    filename = './For_Yiming/model1_val/' + str(i).zfill(3) + '.mat'
 #    sio.savemat(filename, dict_to_save)
 
+while True:
+    path = '/media/mjia/Data/SUN3D/train/'
+    index = [[i] for i in range(1, 102899)]
+    shuffle(index)
+    ([x, x1, x2], y1) = utility.loadData_judgement(index, 50, 10, path, image_mean)
+    depth = model_overall.predict_on_batch(x)
 
-
-for i in range(1, total+1):
-    filename = path + str(i).zfill(7) + '.mat'
-    xx = sio.loadmat(filename)
-    yy = xx['Data']['depth'][0][0][0][0][16:464, :]
-    y1 = yy[::2, ::2]
-    if i == 1:
-        x[0, :, :, 3:6] = xx['Data']['image'][0][0][0][0][16:464, :, :]
-        continue
-    else:
-        #x[0, :, :, 0:3] = x[0, :, :, 3:6]  #binocular
-        x[0, :, :, 0:3] = xx['Data']['image'][0][0][0][0][16:464, :, :]
-        x[0, :, :, 3:6] = xx['Data']['image'][0][0][0][0][16:464, :, :]
-
-    xRGB = x.astype('uint8');
-    xPred = x.astype('float32') - image_mean
-
-    xPred /= 255
-    depth = model.predict_on_batch(xPred)
-    image_to_show = showImange(xRGB, y1, depth, 1)
-    #image_to_show.close()
-    #image_to_show.show(title=1)
+    image_to_show = depth[1][:,:,0]
+    # image_to_show.close()
+    # image_to_show.show(title=1)
     plt.imshow(image_to_show)
-    plt.pause(0.001)
-
-
-
-

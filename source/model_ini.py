@@ -227,7 +227,7 @@ def model_judgement(input_shape):
     inter1 = concatenate([upconv1, conv1, pr2up], axis=3)
 
     iconv1 = Conv2D(filters=32, kernel_size=(3, 3), strides=(1, 1), padding="same", activation='relu')(inter1)
-    pr1 = Conv2D(filters=3, kernel_size=(3, 3), strides=(1, 1), padding="same", activation='softmax')(iconv1)
+    pr1 = Conv2D(filters=2, kernel_size=(3, 3), strides=(1, 1), padding="same", activation='softmax')(iconv1)
     # pr1b = Activation(K.softmax)(pr1)
 
     far_w = core.Lambda(lambda x: x[:, :, :, 1:2])(pr1)

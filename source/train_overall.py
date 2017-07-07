@@ -30,7 +30,7 @@ model_overall.compile(loss=utility.my_loss,
                   metrics=[utility.metric_L1_real],
                   optimizer=keras.optimizers.Adadelta())
 
-loss = np.empty(shape=(40, 13))
+loss = np.empty(shape=(40, 2))
 
 for i in range(1, 40):
 
