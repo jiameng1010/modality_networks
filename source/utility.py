@@ -400,6 +400,11 @@ def loadData_overall(index, index_begin, batchSize, path, image_mean):
     x = np.empty(shape=(batchSize, 448, 640, 6))
     yy = np.empty(shape=(448, 640))
     y1 = np.empty(shape=(batchSize, 224, 320, 1))
+    y2 = np.empty(shape=(batchSize, 112, 160, 1))
+    y3 = np.empty(shape=(batchSize, 56, 80, 1))
+    y4 = np.empty(shape=(batchSize, 28, 40, 1))
+    y5 = np.empty(shape=(batchSize, 14, 20, 1))
+    y6 = np.empty(shape=(batchSize, 7, 10, 1))
     for i in range(batchSize):
         number_of_file = str(index[index_begin+i][0])
         filename = path + number_of_file.zfill(7) + '.mat'
@@ -409,13 +414,28 @@ def loadData_overall(index, index_begin, batchSize, path, image_mean):
         yy = xx['Data']['depth'][0][0][0][1][16:464,:]
         yy = yy.astype('float32')
         y1[i, :, :, 0] = cv2.pyrDown(yy)
+        y2[i, :, :, 0] = cv2.pyrDown(y1[i, :, :, 0])
+        y3[i, :, :, 0] = cv2.pyrDown(y2[i, :, :, 0])
+        y4[i, :, :, 0] = cv2.pyrDown(y3[i, :, :, 0])
+        y5[i, :, :, 0] = cv2.pyrDown(y4[i, :, :, 0])
+        y6[i, :, :, 0] = cv2.pyrDown(y5[i, :, :, 0])
 
-    ind_zero = y1[:,:,:,:] < 0.2
+    ind_zero = y1[:,:,:,:] < 0.3
     y1[ind_zero] = 0
+    ind_zero = y2[:,:,:,:] < 0.3
+    y2[ind_zero] = 0
+    ind_zero = y3[:,:,:,:] < 0.3
+    y3[ind_zero] = 0
+    ind_zero = y4[:,:,:,:] < 0.3
+    y4[ind_zero] = 0
+    ind_zero = y5[:,:,:,:] < 0.3
+    y5[ind_zero] = 0
+    ind_zero = y6[:,:,:,:] < 0.3
+    y6[ind_zero] = 0
     x = x.astype('float32')
     x /= 255
 
-    return (x, y1)
+    return (x, [y1, y2, y3, y4, y5, y6])
 
 
 def data_generator(isTrain = True, isGAN = True, close_far_all = 0, batchSize = 10):

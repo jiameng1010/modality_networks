@@ -61,5 +61,5 @@ while(True):
     pre_far = model_far.predict_on_batch(x)
     pre_close = model_close.predict_on_batch(x)
     filename = '/media/mjia/Data/SUN3D/val_pr/' + str(i).zfill(7)
-    np.save(filename, [pre_far[5], pre_close[5]])
+    np.save(filename, [pre_far, pre_close])
     print(i)

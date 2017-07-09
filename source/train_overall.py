@@ -17,7 +17,7 @@ input_shape = (img_rows, img_cols, 6)
 # initialize the models
 model_far = model_ini.model_init(input_shape)
 model_close = model_ini.model_init(input_shape)
-model_judge = model_ini.model_judgement(input_shape)
+model_judge = model_ini.model_judgement2()
 model_overall = model_ini.model_overall(model_close, model_far, model_judge)
 
 # load pre-trained
@@ -38,6 +38,8 @@ model_judge.compile(loss=utility.my_loss,
 model_overall.compile(loss=utility.my_loss,
                   metrics=[utility.metric_L1_real],
                   optimizer=keras.optimizers.Adadelta())
+
+loss = np.empty(shape=(40, 13))
 
 for i in range(1, 40):
 
