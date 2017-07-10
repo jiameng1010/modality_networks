@@ -57,14 +57,14 @@ img_rows, img_cols = 448, 640
 input_shape = (img_rows, img_cols, 6)
 model_close = model_ini.model_init(input_shape)
 model_far = model_ini.model_init(input_shape)
-model_judge = model_ini.model_judgement(input_shape)
+model_judge = model_ini.model_judgement2()
 model_overall = model_ini.model_overall(model_close, model_far, model_judge)
 
 model_overall.compile(loss=utility.my_loss,
                   metrics=[utility.metric_L1_real],
                   optimizer=keras.optimizers.Adadelta())
 
-model_overall.load_weights('./trained_models/model_epoch_5.hdf5')
+model_overall.load_weights('./trained_models/model_epoch_7.hdf5')
 #loss = model.evaluate_generator(utility.data_generator(isTrain = False, isGAN= False, batchSize = 20), steps = 255)
 
 x = np.empty(shape=(1, 448, 640, 6))
@@ -98,7 +98,10 @@ while True:
     ([x, x1, x2], y1) = utility.loadData_judgement(index, 50, 10, path, image_mean)
     depth = model_overall.predict_on_batch(x)
 
-    image_to_show = depth[1][:,:,0]
+    image_to_show = np.ones(shape=(10, 224, 640))
+    image_to_show[:,:,0:320] = depth[5][:,:,:,0]
+    image_to_show[:,:,320:640] = y1[:,:,:,0]
     # image_to_show.close()
     # image_to_show.show(title=1)
-    plt.imshow(image_to_show)
+    for i in range(10):
+        plt.imshow(image_to_show[i])

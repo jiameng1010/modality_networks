@@ -435,7 +435,9 @@ def loadData_overall(index, index_begin, batchSize, path, image_mean):
     x = x.astype('float32')
     x /= 255
 
-    return (x, [y1, y2, y3, y4, y5, y6])
+    y = [y6, y5, y4, y3, y2, y1]
+
+    return (x, y)
 
 
 def data_generator(isTrain = True, isGAN = True, close_far_all = 0, batchSize = 10):
