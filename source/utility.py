@@ -7,6 +7,7 @@ import numpy as np
 import scipy.io as sio
 import tensorflow as tf
 from keras import backend as K
+import matplotlib.pyplot as plt
 
 trainn = 102899
 val = 5287
@@ -32,12 +33,12 @@ def loadDataGAN(index, index_begin, batchSize, path, image_mean):
         x[i,:,:,3:6] = xx['Data']['image'][0][0][0][1][16:464,:,:] - image_mean
         yy = xx['Data']['depth'][0][0][0][1][16:464,:]
         yy = yy.astype('float32')
-        y1[i, :, :, 0] = cv2.pyrDown(yy)
-        y2[i, :, :, 0] = cv2.pyrDown(y1[i, :, :, 0])
-        y3[i, :, :, 0] = cv2.pyrDown(y2[i, :, :, 0])
-        y4[i, :, :, 0] = cv2.pyrDown(y3[i, :, :, 0])
-        y5[i, :, :, 0] = cv2.pyrDown(y4[i, :, :, 0])
-        y6[i, :, :, 0] = cv2.pyrDown(y5[i, :, :, 0])
+        y1[i, :, :, 0] = pyrDown(yy)
+        y2[i, :, :, 0] = pyrDown(y1[i, :, :, 0])
+        y3[i, :, :, 0] = pyrDown(y2[i, :, :, 0])
+        y4[i, :, :, 0] = pyrDown(y3[i, :, :, 0])
+        y5[i, :, :, 0] = pyrDown(y4[i, :, :, 0])
+        y6[i, :, :, 0] = pyrDown(y5[i, :, :, 0])
 
     x = x.astype('float32')
     x /= 255
@@ -59,7 +60,7 @@ def loadData_judgement(index, index_begin, batchSize, path, image_mean):
         x[i,:,:,3:6] = xx['Data']['image'][0][0][0][1][16:464,:,:] - image_mean
         yy = xx['Data']['depth'][0][0][0][1][16:464,:]
         yy = yy.astype('float32')
-        y1[i, :, :, 0] = cv2.pyrDown(yy)
+        y1[i, :, :, 0] = pyrDown(yy)
 
         filename = path[:-1] + '_pr/' + number_of_file.zfill(7) + '.npy'
         xx = np.load(filename)
@@ -92,25 +93,12 @@ def loadData_close(index, index_begin, batchSize, path, image_mean):
         yy = yy.astype('float32')
         ind = yy[:,:] > 3
         yy[ind] = 0
-        y1[i, :, :, 0] = cv2.pyrDown(yy)
-        y2[i, :, :, 0] = cv2.pyrDown(y1[i, :, :, 0])
-        y3[i, :, :, 0] = cv2.pyrDown(y2[i, :, :, 0])
-        y4[i, :, :, 0] = cv2.pyrDown(y3[i, :, :, 0])
-        y5[i, :, :, 0] = cv2.pyrDown(y4[i, :, :, 0])
-        y6[i, :, :, 0] = cv2.pyrDown(y5[i, :, :, 0])
-
-    ind_zero = y1[:,:,:,:] < 0.3
-    y1[ind_zero] = 0
-    ind_zero = y2[:,:,:,:] < 0.3
-    y2[ind_zero] = 0
-    ind_zero = y3[:,:,:,:] < 0.3
-    y3[ind_zero] = 0
-    ind_zero = y4[:,:,:,:] < 0.3
-    y4[ind_zero] = 0
-    ind_zero = y5[:,:,:,:] < 0.3
-    y5[ind_zero] = 0
-    ind_zero = y6[:,:,:,:] < 0.3
-    y6[ind_zero] = 0
+        y1[i, :, :, 0] = pyrDown(yy)
+        y2[i, :, :, 0] = pyrDown(y1[i, :, :, 0])
+        y3[i, :, :, 0] = pyrDown(y2[i, :, :, 0])
+        y4[i, :, :, 0] = pyrDown(y3[i, :, :, 0])
+        y5[i, :, :, 0] = pyrDown(y4[i, :, :, 0])
+        y6[i, :, :, 0] = pyrDown(y5[i, :, :, 0])
 
     x = x.astype('float32')
     x /= 255
@@ -136,25 +124,12 @@ def loadData(index, index_begin, batchSize, path, image_mean):
         x[i,:,:,3:6] = xx['Data']['image'][0][0][0][1][16:464,:,:] - image_mean
         yy = xx['Data']['depth'][0][0][0][1][16:464,:]
         yy = yy.astype('float32')
-        y1[i, :, :, 0] = cv2.pyrDown(yy)
-        y2[i, :, :, 0] = cv2.pyrDown(y1[i, :, :, 0])
-        y3[i, :, :, 0] = cv2.pyrDown(y2[i, :, :, 0])
-        y4[i, :, :, 0] = cv2.pyrDown(y3[i, :, :, 0])
-        y5[i, :, :, 0] = cv2.pyrDown(y4[i, :, :, 0])
-        y6[i, :, :, 0] = cv2.pyrDown(y5[i, :, :, 0])
-
-    ind_zero = y1[:,:,:,:] < 0.3
-    y1[ind_zero] = 0
-    ind_zero = y2[:,:,:,:] < 0.3
-    y2[ind_zero] = 0
-    ind_zero = y3[:,:,:,:] < 0.3
-    y3[ind_zero] = 0
-    ind_zero = y4[:,:,:,:] < 0.3
-    y4[ind_zero] = 0
-    ind_zero = y5[:,:,:,:] < 0.3
-    y5[ind_zero] = 0
-    ind_zero = y6[:,:,:,:] < 0.3
-    y6[ind_zero] = 0
+        y1[i, :, :, 0] = pyrDown(yy)
+        y2[i, :, :, 0] = pyrDown(y1[i, :, :, 0])
+        y3[i, :, :, 0] = pyrDown(y2[i, :, :, 0])
+        y4[i, :, :, 0] = pyrDown(y3[i, :, :, 0])
+        y5[i, :, :, 0] = pyrDown(y4[i, :, :, 0])
+        y6[i, :, :, 0] = pyrDown(y5[i, :, :, 0])
 
     x = x.astype('float32')
     x /= 255
@@ -181,25 +156,12 @@ def loadData_far(index, index_begin, batchSize, path, image_mean):
         yy = yy.astype('float32')
         ind = yy[:,:] < 2.5
         yy[ind] = 0
-        y1[i, :, :, 0] = cv2.pyrDown(yy)
-        y2[i, :, :, 0] = cv2.pyrDown(y1[i, :, :, 0])
-        y3[i, :, :, 0] = cv2.pyrDown(y2[i, :, :, 0])
-        y4[i, :, :, 0] = cv2.pyrDown(y3[i, :, :, 0])
-        y5[i, :, :, 0] = cv2.pyrDown(y4[i, :, :, 0])
-        y6[i, :, :, 0] = cv2.pyrDown(y5[i, :, :, 0])
-
-    ind_zero = y1[:,:,:,:] < 0.3
-    y1[ind_zero] = 0
-    ind_zero = y2[:,:,:,:] < 0.3
-    y2[ind_zero] = 0
-    ind_zero = y3[:,:,:,:] < 0.3
-    y3[ind_zero] = 0
-    ind_zero = y4[:,:,:,:] < 0.3
-    y4[ind_zero] = 0
-    ind_zero = y5[:,:,:,:] < 0.3
-    y5[ind_zero] = 0
-    ind_zero = y6[:,:,:,:] < 0.3
-    y6[ind_zero] = 0
+        y1[i, :, :, 0] = pyrDown(yy)
+        y2[i, :, :, 0] = pyrDown(y1[i, :, :, 0])
+        y3[i, :, :, 0] = pyrDown(y2[i, :, :, 0])
+        y4[i, :, :, 0] = pyrDown(y3[i, :, :, 0])
+        y5[i, :, :, 0] = pyrDown(y4[i, :, :, 0])
+        y6[i, :, :, 0] = pyrDown(y5[i, :, :, 0])
 
     x = x.astype('float32')
     x /= 255
@@ -232,20 +194,20 @@ def loadData_binary(index, index_begin, batchSize, path, image_mean):
         yy_far[ind_far] = 1
 
         #NA
-        y1[i, :, :, 0] = cv2.threshold(cv2.pyrDown(yy_NA), 0.5, 1, cv2.THRESH_BINARY)[1]
-        y2[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y1[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
-        y3[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y2[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
-        y4[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y3[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
-        y5[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y4[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
-        y6[i, :, :, 0] = cv2.threshold(cv2.pyrDown(y5[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
+        y1[i, :, :, 0] = cv2.threshold(pyrDown(yy_NA), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y2[i, :, :, 0] = cv2.threshold(pyrDown(y1[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
+        y3[i, :, :, 0] = cv2.threshold(pyrDown(y2[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
+        y4[i, :, :, 0] = cv2.threshold(pyrDown(y3[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
+        y5[i, :, :, 0] = cv2.threshold(pyrDown(y4[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
+        y6[i, :, :, 0] = cv2.threshold(pyrDown(y5[i, :, :, 0]), 0.55, 1, cv2.THRESH_BINARY)[1]
 
         #far
-        y1[i, :, :, 1] = cv2.threshold(cv2.pyrDown(yy_far), 0.5, 1, cv2.THRESH_BINARY)[1]
-        y2[i, :, :, 1] = cv2.threshold(cv2.pyrDown(y1[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
-        y3[i, :, :, 1] = cv2.threshold(cv2.pyrDown(y2[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
-        y4[i, :, :, 1] = cv2.threshold(cv2.pyrDown(y3[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
-        y5[i, :, :, 1] = cv2.threshold(cv2.pyrDown(y4[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
-        y6[i, :, :, 1] = cv2.threshold(cv2.pyrDown(y5[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y1[i, :, :, 1] = cv2.threshold(pyrDown(yy_far), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y2[i, :, :, 1] = cv2.threshold(pyrDown(y1[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y3[i, :, :, 1] = cv2.threshold(pyrDown(y2[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y4[i, :, :, 1] = cv2.threshold(pyrDown(y3[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y5[i, :, :, 1] = cv2.threshold(pyrDown(y4[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
+        y6[i, :, :, 1] = cv2.threshold(pyrDown(y5[i, :, :, 1]), 0.5, 1, cv2.THRESH_BINARY)[1]
 
         #close
         y1[i, :, :, 2] = np.ones_like(y1[i, :, :, 1]) - y1[i, :, :, 1]
@@ -413,25 +375,13 @@ def loadData_overall(index, index_begin, batchSize, path, image_mean):
         x[i,:,:,3:6] = xx['Data']['image'][0][0][0][1][16:464,:,:] - image_mean
         yy = xx['Data']['depth'][0][0][0][1][16:464,:]
         yy = yy.astype('float32')
-        y1[i, :, :, 0] = cv2.pyrDown(yy)
-        y2[i, :, :, 0] = cv2.pyrDown(y1[i, :, :, 0])
-        y3[i, :, :, 0] = cv2.pyrDown(y2[i, :, :, 0])
-        y4[i, :, :, 0] = cv2.pyrDown(y3[i, :, :, 0])
-        y5[i, :, :, 0] = cv2.pyrDown(y4[i, :, :, 0])
-        y6[i, :, :, 0] = cv2.pyrDown(y5[i, :, :, 0])
+        y1[i, :, :, 0] = pyrDown(yy)
+        y2[i, :, :, 0] = pyrDown(y1[i, :, :, 0])
+        y3[i, :, :, 0] = pyrDown(y2[i, :, :, 0])
+        y4[i, :, :, 0] = pyrDown(y3[i, :, :, 0])
+        y5[i, :, :, 0] = pyrDown(y4[i, :, :, 0])
+        y6[i, :, :, 0] = pyrDown(y5[i, :, :, 0])
 
-    ind_zero = y1[:,:,:,:] < 0.3
-    y1[ind_zero] = 0
-    ind_zero = y2[:,:,:,:] < 0.3
-    y2[ind_zero] = 0
-    ind_zero = y3[:,:,:,:] < 0.3
-    y3[ind_zero] = 0
-    ind_zero = y4[:,:,:,:] < 0.3
-    y4[ind_zero] = 0
-    ind_zero = y5[:,:,:,:] < 0.3
-    y5[ind_zero] = 0
-    ind_zero = y6[:,:,:,:] < 0.3
-    y6[ind_zero] = 0
     x = x.astype('float32')
     x /= 255
 
@@ -499,3 +449,28 @@ def copy_weights(model, d):
             model_layer_name = model.get_layer(name=model_layer_name).input.name.split('/')[0]
 
     return True
+
+def pyrDown(y):
+    y_down = y[::2, ::2]
+
+    ind0 = y[:,:]==0
+    mask = np.ones_like(y)
+    mask[ind0] = 0
+
+    y_pyr = cv2.pyrDown(y)
+    mask_pyr = cv2.pyrDown(mask)
+
+    ind0_down = y_down[:,:]==0
+    mask_pyr[ind0_down] = None
+    y_pyr = np.true_divide(y_pyr, mask_pyr)
+
+    mask_nan = np.isnan(y_pyr)
+    ind_nan = mask_nan[:,:]==True
+    y_pyr[ind_nan] = 0
+
+    return y_pyr
+
+
+
+
+
