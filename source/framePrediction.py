@@ -80,7 +80,7 @@ img_rows, img_cols = 448, 640
 input_shape = (img_rows, img_cols, 6)
 
 # initialize the model
-model = model_ini.model_init(input_shape)
+model = model_ini.model_overall_shared(input_shape)
 
 model.compile(loss=utility.my_loss,
               metrics=[utility.metric_L1_real],

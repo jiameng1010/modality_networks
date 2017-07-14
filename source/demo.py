@@ -59,7 +59,7 @@ model.compile(loss=my_loss,
               metrics=[metric_L1_inv, metric_L1_real],
               optimizer=keras.optimizers.Adadelta())
 
-model.load_weights('./trained_models/model_epoch_8.hdf5')
+model.load_weights('./trained_models/model_epoch_19.hdf5')
 #loss = model.evaluate_generator(utility.data_generator(isTrain = False, isGAN= False, batchSize = 20), steps = 255)
 
 x = np.empty(shape=(1, 448, 640, 6))
