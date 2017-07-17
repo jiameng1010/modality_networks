@@ -563,8 +563,8 @@ def model_overall_shared(input_shape):
     pre6 = Add()([far_p6, close_p6])
 
 
-    model = Model(inputs=a, outputs=[close_6, close_5, close_4, close_3, close_2, close_1,
-                                     far_6, far_5, far_4, far_3, far_2, far_1,
+    model = Model(inputs=a, outputs=[pr6_c, pr5_c, pr4_c, pr3_c, pr2_c, pr1_c,
+                                     pr6_f, pr5_f, pr4_f, pr3_f, pr2_f, pr1_f,
                                      pre6, pre5, pre4, pre3, pre2, pre1])
 
     return model
