@@ -55,16 +55,16 @@ def showImange(x, yy, depth, batchSize):
 # initialize the model
 img_rows, img_cols = 448, 640
 input_shape = (img_rows, img_cols, 6)
-model_close = model_ini.model_init(input_shape)
-model_far = model_ini.model_init(input_shape)
-model_judge = model_ini.model_judgement2()
-model_overall = model_ini.model_overall(model_close, model_far, model_judge)
+#model_close = model_ini.model_init(input_shape)
+#model_far = model_ini.model_init(input_shape)
+#model_judge = model_ini.model_judgement2()
+model_overall = model_ini.model_overall_shared(input_shape)
 
 model_overall.compile(loss=utility.my_loss,
                   metrics=[utility.metric_L1_real],
                   optimizer=keras.optimizers.Adadelta())
 
-model_overall.load_weights('./trained_models/model_epoch_7.hdf5')
+model_overall.load_weights('./trained_models/model_epoch_38.hdf5')
 #loss = model.evaluate_generator(utility.data_generator(isTrain = False, isGAN= False, batchSize = 20), steps = 255)
 
 x = np.empty(shape=(1, 448, 640, 6))
@@ -92,8 +92,8 @@ image_mean[:, :, 2] = 97 * np.ones(shape=(448, 640))
 #    sio.savemat(filename, dict_to_save)
 
 while True:
-    path = '/media/mjia/Data/SUN3D/train/'
-    index = [[i] for i in range(1, 102899)]
+    path = '/media/mjia/Data/SUN3D/val/'
+    index = [[i] for i in range(1, 5287)]
     shuffle(index)
     ([x, x1, x2], y1) = utility.loadData_judgement(index, 50, 10, path, image_mean)
     depth = model_overall.predict_on_batch(x)

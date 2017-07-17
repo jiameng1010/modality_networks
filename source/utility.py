@@ -419,7 +419,9 @@ def data_generator(isTrain = True, isGAN = True, close_far_all = 0, batchSize = 
                 (x, y_close) = loadData_close(index, i, batchSize, path, image_mean)
                 (x, y_far) = loadData_far(index, i, batchSize, path, image_mean)
                 (x, y) = loadData(index, i, batchSize, path, image_mean)
-                yield (x, y_close, y_far, y)
+                yield (x, [y_close[0], y_close[1], y_close[2], y_close[3], y_close[4], y_close[5],
+                           y_far[0], y_far[1], y_far[2], y_far[3], y_far[4], y_far[5],
+                           y[0], y[1], y[2], y[3], y[4], y[5]])
 
         i = i + batchSize
 

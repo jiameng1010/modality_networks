@@ -1,21 +1,29 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-curve_train = np.empty(shape=(40))
-curve_val = np.empty(shape=(40))
+curve_base = np.empty(shape=(40))
+curve = np.empty(shape=(40))
 for i in range(40):
-    curve_train[i] = 0
-    curve_val[i] = 0
-for i in range(1, 34):
-    filetrain = './trained_models/model_epoch_train' + str(i) + '.npy'
-    fileval = './trained_models/model_epoch_val' + str(i) + '.npy'
-    loss_train = np.load(filetrain)
-    loss_val = np.load(fileval)
-    curve_train[i] = loss_train.item()['conv2d_21_loss'][0]
-    curve_val[i] = loss_val[6]
+    curve_base[i] = 0
+    curve[i] = 0
+#for i in range(1, 39):
+#    filetrain_baseline = './trained_models_baseline/model_epoch_train' + str(i) + '.npy'
+#    filetrain = './trained_models/model_epoch_train' + str(i) + '.npy'
+#    loss_baseline = np.load(filetrain_baseline)
+#    loss = np.load(filetrain)
+#    curve_base[i] = loss_baseline.item()['conv2d_21_metric_L1_real'][0]
+#    curve[i] = loss.item()['add_6_metric_L1_real'][0]
 
-plt.plot(curve_train)
-plt.plot(curve_val)
+for i in range(1, 39):
+    filetrain_baseline = './trained_models_baseline/model_epoch_val' + str(i) + '.npy'
+    filetrain = './trained_models/model_epoch_val' + str(i) + '.npy'
+    loss_baseline = np.load(filetrain_baseline)
+    loss = np.load(filetrain)
+    curve_base[i] = loss_baseline[5]
+    curve[i] = loss[5]
+
+plt.plot(curve_base)
+plt.plot(curve)
 plt.show()
 
 

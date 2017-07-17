@@ -53,13 +53,13 @@ def showImange(x, yy, depth, batchSize):
 # initialize the model
 img_rows, img_cols = 448, 640
 input_shape = (img_rows, img_cols, 6)
-model = model_ini.model_init(input_shape)
+model = model_ini.model_overall_shared(input_shape)
 
 model.compile(loss=my_loss,
               metrics=[metric_L1_inv, metric_L1_real],
               optimizer=keras.optimizers.Adadelta())
 
-model.load_weights('./trained_models/model_epoch_19.hdf5')
+model.load_weights('./trained_models/model_epoch_38.hdf5')
 #loss = model.evaluate_generator(utility.data_generator(isTrain = False, isGAN= False, batchSize = 20), steps = 255)
 
 x = np.empty(shape=(1, 448, 640, 6))

@@ -97,7 +97,7 @@ loss = np.empty(shape=(40, 13))
 
 for i in range(1, 40):
 
-    history = model.fit_generator(utility.data_generator(isTrain = True, isGAN = False,  batchSize = 10), steps_per_epoch = 4000, epochs = 1)
+    history = model.fit_generator(utility.data_generator(isTrain = True, isGAN = False, close_far_all = 3, batchSize = 10), steps_per_epoch = 4000, epochs = 1)
     loss[i] = model.evaluate_generator(utility.data_generator(isTrain = False, isGAN = False, batchSize = 20), steps = 250)
     filename = '../../exp_data/trained_models/model_epoch_' + str(i) + '.hdf5'
     model.save_weights(filename)
