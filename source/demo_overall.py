@@ -58,13 +58,22 @@ input_shape = (img_rows, img_cols, 6)
 #model_close = model_ini.model_init(input_shape)
 #model_far = model_ini.model_init(input_shape)
 #model_judge = model_ini.model_judgement2()
+model_old = model_ini.model_overall_shared_old(input_shape)
 model_overall = model_ini.model_overall_shared(input_shape)
 
 model_overall.compile(loss=utility.my_loss,
                   metrics=[utility.metric_L1_real],
                   optimizer=keras.optimizers.Adadelta())
 
-model_overall.load_weights('./trained_models/model_epoch_38.hdf5')
+model_old.load_weights('./trained_models/model_epoch_38.hdf5')
+for iterm in model_old.layers:
+    if (type(iterm) == keras.layers.Conv2DTranspose):
+        iterm_name = 'conv2d_transpose_' + str(int(iterm.name.split('_')[-1]) + 15)
+        model_overall.get_layer(name=iterm_name).set_weights(iterm.get_weights())
+    if (type(iterm) == keras.layers.Conv2D):
+        iterm_name = 'conv2d_' + str(int(iterm.name.split('_')[-1]) + 43)
+        model_overall.get_layer(name=iterm_name).set_weights(iterm.get_weights())
+
 #loss = model.evaluate_generator(utility.data_generator(isTrain = False, isGAN= False, batchSize = 20), steps = 255)
 
 x = np.empty(shape=(1, 448, 640, 6))
@@ -92,15 +101,17 @@ image_mean[:, :, 2] = 97 * np.ones(shape=(448, 640))
 #    sio.savemat(filename, dict_to_save)
 
 while True:
-    path = '/media/mjia/Data/SUN3D/val/'
-    index = [[i] for i in range(1, 5287)]
+    path = '/media/mjia/Data/SUN3D/train/'
+    index = [[i] for i in range(1, 102899)]
     shuffle(index)
     ([x, x1, x2], y1) = utility.loadData_judgement(index, 50, 10, path, image_mean)
     depth = model_overall.predict_on_batch(x)
 
-    image_to_show = np.ones(shape=(10, 224, 640))
-    image_to_show[:,:,0:320] = depth[5][:,:,:,0]
-    image_to_show[:,:,320:640] = y1[:,:,:,0]
+    image_to_show = np.ones(shape=(10, 448, 640))
+    image_to_show[:,0:224,0:320] = depth[5][:,:,:,0]
+    image_to_show[:,0:224,320:640] = y1[:,:,:,0]
+    image_to_show[:,224:448,0:320] = depth[11][:,:,:,0]
+    image_to_show[:,224:448,320:640] = depth[17][:,:,:,0]
     # image_to_show.close()
     # image_to_show.show(title=1)
     for i in range(10):
