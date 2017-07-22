@@ -482,6 +482,43 @@ def model_overall_shared(input_shape):
     iconv1_f  = Conv2D(filters=32, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter1_f )
     pr1_f  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv1_f )
 
+    ############################## uncontrolled ###############################
+    ############################## uncontrolled ###############################
+    ############################## uncontrolled ###############################
+    ############################## uncontrolled ###############################
+    ############################## uncontrolled ###############################
+    upconv5_u  = Conv2DTranspose(filters=512, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), input_shape=(7, 10, 1024), padding="same")(conv6b)
+    pr6_u  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(conv6b)
+    pr6up_u  = UpSampling2D(size=(2,2))(pr6_u )
+    inter5_u  = concatenate([upconv5_u , conv5b, pr6up_u ], axis=3)
+
+    iconv5_u  = Conv2D(filters=512, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter5_u )
+    pr5_u  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv5_u )
+    pr5up_u  = UpSampling2D(size=(2,2))(pr5_u )
+    upconv4_u  = Conv2DTranspose(filters=256, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv5_u )
+    inter4_u  = concatenate([upconv4_u , conv4b, pr5up_u ], axis=3)
+
+    iconv4_u  = Conv2D(filters=256, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter4_u )
+    pr4_u  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv4_u )
+    pr4up_u  = UpSampling2D(size=(2,2))(pr4_u )
+    upconv3_u  = Conv2DTranspose(filters=128, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv4_u )
+    inter3_u  = concatenate([upconv3_u , conv3b, pr4up_u ], axis=3)
+
+    iconv3_u  = Conv2D(filters=128, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter3_u )
+    pr3_u  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv3_u )
+    pr3up_u  = UpSampling2D(size=(2,2))(pr3_u )
+    upconv2_u  = Conv2DTranspose(filters=64, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv3_u )
+    inter2_u  = concatenate([upconv2_u , conv2, pr3up_u ], axis=3)
+
+    iconv2_u  = Conv2D(filters=64, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter2_u )
+    pr2_u  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv2_u )
+    pr2up_u  = UpSampling2D(size=(2,2))(pr2_u )
+    upconv1_u  = Conv2DTranspose(filters=32, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv2_u )
+    inter1_u  = concatenate([upconv1_u , conv1, pr2up_u ], axis=3)
+
+    iconv1_u  = Conv2D(filters=32, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter1_u )
+    pr1_u  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv1_u )
+
     ############################## fuse ###############################
     ############################## fuse ###############################
     ############################## fuse ###############################
@@ -489,78 +526,90 @@ def model_overall_shared(input_shape):
     ############################## fuse ###############################
 
     upconv5 = Conv2DTranspose(filters=512, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), input_shape=(7, 10, 1024), padding="same")(conv6b)
-    pr6 = Conv2D(filters=2, kernel_size=(3,3), strides=(1,1), padding="same")(conv6b)
+    pr6 = Conv2D(filters=3, kernel_size=(3,3), strides=(1,1), padding="same")(conv6b)
     pr6b = Activation(K.softmax)(pr6)
     pr6up = UpSampling2D(size=(2,2))(pr6)
     inter5 = concatenate([upconv5, conv5b, pr6up], axis=3)
 
     iconv5 = Conv2D(filters=512, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter5)
-    pr5 = Conv2D(filters=2, kernel_size=(3,3), strides=(1,1), padding="same")(iconv5)
+    pr5 = Conv2D(filters=3, kernel_size=(3,3), strides=(1,1), padding="same")(iconv5)
     pr5b = Activation(K.softmax)(pr5)
     pr5up = UpSampling2D(size=(2,2))(pr5)
     upconv4 = Conv2DTranspose(filters=256, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv5)
     inter4 = concatenate([upconv4, conv4b, pr5up], axis=3)
 
     iconv4 = Conv2D(filters=256, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter4)
-    pr4 = Conv2D(filters=2, kernel_size=(3,3), strides=(1,1), padding="same")(iconv4)
+    pr4 = Conv2D(filters=3, kernel_size=(3,3), strides=(1,1), padding="same")(iconv4)
     pr4b = Activation(K.softmax)(pr4)
     pr4up = UpSampling2D(size=(2,2))(pr4)
     upconv3 = Conv2DTranspose(filters=128, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv4)
     inter3 = concatenate([upconv3, conv3b, pr4up], axis=3)
 
     iconv3 = Conv2D(filters=128, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter3)
-    pr3 = Conv2D(filters=2, kernel_size=(3,3), strides=(1,1), padding="same")(iconv3)
+    pr3 = Conv2D(filters=3, kernel_size=(3,3), strides=(1,1), padding="same")(iconv3)
     pr3b = Activation(K.softmax)(pr3)
     pr3up = UpSampling2D(size=(2,2))(pr3)
     upconv2 = Conv2DTranspose(filters=64, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv3)
     inter2 = concatenate([upconv2, conv2, pr3up], axis=3)
 
     iconv2 = Conv2D(filters=64, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter2)
-    pr2 = Conv2D(filters=2, kernel_size=(3,3), strides=(1,1), padding="same")(iconv2)
+    pr2 = Conv2D(filters=3, kernel_size=(3,3), strides=(1,1), padding="same")(iconv2)
     pr2b = Activation(K.softmax)(pr2)
     pr2up = UpSampling2D(size=(2,2))(pr2)
     upconv1 = Conv2DTranspose(filters=32, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv2)
     inter1 = concatenate([upconv1, conv1, pr2up], axis=3)
 
     iconv1 = Conv2D(filters=32, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter1)
-    pr1 = Conv2D(filters=2, kernel_size=(3,3), strides=(1,1), padding="same", activation='softmax')(iconv1)
+    pr1 = Conv2D(filters=3, kernel_size=(3,3), strides=(1,1), padding="same", activation='softmax')(iconv1)
 
     far_1 = core.Lambda(lambda x: x[:, :, :, 0:1])(pr1)
     close_1 = core.Lambda(lambda x: x[:, :, :, 1:2])(pr1)
+    uncondrolled_1 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr1)
     far_2 = core.Lambda(lambda x: x[:, :, :, 0:1])(pr2b)
     close_2 = core.Lambda(lambda x: x[:, :, :, 1:2])(pr2b)
+    uncondrolled_2 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr2)
     far_3 = core.Lambda(lambda x: x[:, :, :, 0:1])(pr3b)
     close_3 = core.Lambda(lambda x: x[:, :, :, 1:2])(pr3b)
+    uncondrolled_3 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr3)
     far_4 = core.Lambda(lambda x: x[:, :, :, 0:1])(pr4b)
     close_4 = core.Lambda(lambda x: x[:, :, :, 1:2])(pr4b)
+    uncondrolled_4 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr4)
     far_5 = core.Lambda(lambda x: x[:, :, :, 0:1])(pr5b)
     close_5 = core.Lambda(lambda x: x[:, :, :, 1:2])(pr5b)
+    uncondrolled_5 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr5)
     far_6 = core.Lambda(lambda x: x[:, :, :, 0:1])(pr6b)
     close_6 = core.Lambda(lambda x: x[:, :, :, 1:2])(pr6b)
+    uncondrolled_6 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr6)
 
     far_p1 = Multiply()([far_1, pr1_f])
     close_p1 = Multiply()([close_1, pr1_c])
-    pre1 = Add()([far_p1, close_p1])
+    uncondrolled_p1 = Multiply()([uncondrolled_1, pr1_u])
+    pre1 = Add()([far_p1, close_p1, uncondrolled_p1])
 
     far_p2 = Multiply()([far_2, pr2_f])
     close_p2 = Multiply()([close_2, pr2_c])
-    pre2 = Add()([far_p2, close_p2])
+    uncondrolled_p2 = Multiply()([uncondrolled_2, pr2_u])
+    pre2 = Add()([far_p2, close_p2, uncondrolled_p2])
 
     far_p3 = Multiply()([far_3, pr3_f])
     close_p3 = Multiply()([close_3, pr3_c])
-    pre3 = Add()([far_p3, close_p3])
+    uncondrolled_p3 = Multiply()([uncondrolled_3, pr3_u])
+    pre3 = Add()([far_p3, close_p3, uncondrolled_p3])
 
     far_p4 = Multiply()([far_4, pr4_f])
     close_p4 = Multiply()([close_4, pr4_c])
-    pre4 = Add()([far_p4, close_p4])
+    uncondrolled_p4 = Multiply()([uncondrolled_4, pr4_u])
+    pre4 = Add()([far_p4, close_p4, uncondrolled_p4])
 
     far_p5 = Multiply()([far_5, pr5_f])
     close_p5 = Multiply()([close_5, pr5_c])
-    pre5 = Add()([far_p5, close_p5])
+    uncondrolled_p5 = Multiply()([uncondrolled_5, pr5_u])
+    pre5 = Add()([far_p5, close_p5, uncondrolled_p5])
 
     far_p6 = Multiply()([far_6, pr6_f])
     close_p6 = Multiply()([close_6, pr6_c])
-    pre6 = Add()([far_p6, close_p6])
+    uncondrolled_p6 = Multiply()([uncondrolled_6, pr6_u])
+    pre6 = Add()([far_p6, close_p6, uncondrolled_p6])
 
 
     model = Model(inputs=a, outputs=[pr6_c, pr5_c, pr4_c, pr3_c, pr2_c, pr1_c,
