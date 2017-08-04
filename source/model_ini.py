@@ -413,36 +413,36 @@ def model_overall_shared(input_shape):
     ############################## close ###############################
     ############################## close ###############################
     ############################## close ###############################
-    upconv5_c = Conv2DTranspose(filters=512, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), input_shape=(7, 10, 1024), padding="same")(conv6b)
+    upconv5_c = Conv2DTranspose(filters=256, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), input_shape=(7, 10, 1024), padding="same")(conv6b)
     pr6_c = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(conv6b)
     pr6up_c = UpSampling2D(size=(2,2))(pr6_c)
     inter5_c = concatenate([upconv5_c, conv5b, pr6up_c], axis=3)
 
-    iconv5_c = Conv2D(filters=512, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter5_c)
+    iconv5_c = Conv2D(filters=256, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter5_c)
     pr5_c = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv5_c)
     pr5up_c = UpSampling2D(size=(2,2))(pr5_c)
-    upconv4_c = Conv2DTranspose(filters=256, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv5_c)
+    upconv4_c = Conv2DTranspose(filters=128, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv5_c)
     inter4_c = concatenate([upconv4_c, conv4b, pr5up_c], axis=3)
 
-    iconv4_c = Conv2D(filters=256, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter4_c)
+    iconv4_c = Conv2D(filters=128, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter4_c)
     pr4_c = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv4_c)
     pr4up_c = UpSampling2D(size=(2,2))(pr4_c)
-    upconv3_c = Conv2DTranspose(filters=128, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv4_c)
+    upconv3_c = Conv2DTranspose(filters=64, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv4_c)
     inter3_c = concatenate([upconv3_c, conv3b, pr4up_c], axis=3)
 
-    iconv3_c = Conv2D(filters=128, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter3_c)
+    iconv3_c = Conv2D(filters=64, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter3_c)
     pr3_c = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv3_c)
     pr3up_c = UpSampling2D(size=(2,2))(pr3_c)
-    upconv2_c = Conv2DTranspose(filters=64, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv3_c)
+    upconv2_c = Conv2DTranspose(filters=32, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv3_c)
     inter2_c = concatenate([upconv2_c, conv2, pr3up_c], axis=3)
 
-    iconv2_c = Conv2D(filters=64, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter2_c)
+    iconv2_c = Conv2D(filters=32, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter2_c)
     pr2_c = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv2_c)
     pr2up_c = UpSampling2D(size=(2,2))(pr2_c)
-    upconv1_c = Conv2DTranspose(filters=32, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv2_c)
+    upconv1_c = Conv2DTranspose(filters=16, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv2_c)
     inter1_c = concatenate([upconv1_c, conv1, pr2up_c], axis=3)
 
-    iconv1_c = Conv2D(filters=32, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter1_c)
+    iconv1_c = Conv2D(filters=16, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter1_c)
     pr1_c = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv1_c)
 
     ############################## far ###############################
@@ -450,36 +450,36 @@ def model_overall_shared(input_shape):
     ############################## far ###############################
     ############################## far ###############################
     ############################## far ###############################
-    upconv5_f  = Conv2DTranspose(filters=512, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), input_shape=(7, 10, 1024), padding="same")(conv6b)
+    upconv5_f  = Conv2DTranspose(filters=256, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), input_shape=(7, 10, 1024), padding="same")(conv6b)
     pr6_f  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(conv6b)
     pr6up_f  = UpSampling2D(size=(2,2))(pr6_f )
     inter5_f  = concatenate([upconv5_f , conv5b, pr6up_f ], axis=3)
 
-    iconv5_f  = Conv2D(filters=512, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter5_f )
+    iconv5_f  = Conv2D(filters=256, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter5_f )
     pr5_f  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv5_f )
     pr5up_f  = UpSampling2D(size=(2,2))(pr5_f )
-    upconv4_f  = Conv2DTranspose(filters=256, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv5_f )
+    upconv4_f  = Conv2DTranspose(filters=128, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv5_f )
     inter4_f  = concatenate([upconv4_f , conv4b, pr5up_f ], axis=3)
 
-    iconv4_f  = Conv2D(filters=256, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter4_f )
+    iconv4_f  = Conv2D(filters=128, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter4_f )
     pr4_f  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv4_f )
     pr4up_f  = UpSampling2D(size=(2,2))(pr4_f )
-    upconv3_f  = Conv2DTranspose(filters=128, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv4_f )
+    upconv3_f  = Conv2DTranspose(filters=64, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv4_f )
     inter3_f  = concatenate([upconv3_f , conv3b, pr4up_f ], axis=3)
 
-    iconv3_f  = Conv2D(filters=128, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter3_f )
+    iconv3_f  = Conv2D(filters=64, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter3_f )
     pr3_f  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv3_f )
     pr3up_f  = UpSampling2D(size=(2,2))(pr3_f )
-    upconv2_f  = Conv2DTranspose(filters=64, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv3_f )
+    upconv2_f  = Conv2DTranspose(filters=32, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv3_f )
     inter2_f  = concatenate([upconv2_f , conv2, pr3up_f ], axis=3)
 
-    iconv2_f  = Conv2D(filters=64, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter2_f )
+    iconv2_f  = Conv2D(filters=32, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter2_f )
     pr2_f  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv2_f )
     pr2up_f  = UpSampling2D(size=(2,2))(pr2_f )
-    upconv1_f  = Conv2DTranspose(filters=32, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv2_f )
+    upconv1_f  = Conv2DTranspose(filters=16, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv2_f )
     inter1_f  = concatenate([upconv1_f , conv1, pr2up_f ], axis=3)
 
-    iconv1_f  = Conv2D(filters=32, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter1_f )
+    iconv1_f  = Conv2D(filters=16, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter1_f )
     pr1_f  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv1_f )
 
     ############################## uncontrolled ###############################
@@ -487,36 +487,36 @@ def model_overall_shared(input_shape):
     ############################## uncontrolled ###############################
     ############################## uncontrolled ###############################
     ############################## uncontrolled ###############################
-    upconv5_u  = Conv2DTranspose(filters=512, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), input_shape=(7, 10, 1024), padding="same")(conv6b)
+    upconv5_u  = Conv2DTranspose(filters=256, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), input_shape=(7, 10, 1024), padding="same")(conv6b)
     pr6_u  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(conv6b)
     pr6up_u  = UpSampling2D(size=(2,2))(pr6_u )
     inter5_u  = concatenate([upconv5_u , conv5b, pr6up_u ], axis=3)
 
-    iconv5_u  = Conv2D(filters=512, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter5_u )
+    iconv5_u  = Conv2D(filters=256, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter5_u )
     pr5_u  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv5_u )
     pr5up_u  = UpSampling2D(size=(2,2))(pr5_u )
-    upconv4_u  = Conv2DTranspose(filters=256, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv5_u )
+    upconv4_u  = Conv2DTranspose(filters=128, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv5_u )
     inter4_u  = concatenate([upconv4_u , conv4b, pr5up_u ], axis=3)
 
-    iconv4_u  = Conv2D(filters=256, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter4_u )
+    iconv4_u  = Conv2D(filters=128, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter4_u )
     pr4_u  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv4_u )
     pr4up_u  = UpSampling2D(size=(2,2))(pr4_u )
-    upconv3_u  = Conv2DTranspose(filters=128, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv4_u )
+    upconv3_u  = Conv2DTranspose(filters=64, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv4_u )
     inter3_u  = concatenate([upconv3_u , conv3b, pr4up_u ], axis=3)
 
-    iconv3_u  = Conv2D(filters=128, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter3_u )
+    iconv3_u  = Conv2D(filters=64, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter3_u )
     pr3_u  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv3_u )
     pr3up_u  = UpSampling2D(size=(2,2))(pr3_u )
-    upconv2_u  = Conv2DTranspose(filters=64, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv3_u )
+    upconv2_u  = Conv2DTranspose(filters=32, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv3_u )
     inter2_u  = concatenate([upconv2_u , conv2, pr3up_u ], axis=3)
 
-    iconv2_u  = Conv2D(filters=64, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter2_u )
+    iconv2_u  = Conv2D(filters=32, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter2_u )
     pr2_u  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv2_u )
     pr2up_u  = UpSampling2D(size=(2,2))(pr2_u )
-    upconv1_u  = Conv2DTranspose(filters=32, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv2_u )
+    upconv1_u  = Conv2DTranspose(filters=16, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv2_u )
     inter1_u  = concatenate([upconv1_u , conv1, pr2up_u ], axis=3)
 
-    iconv1_u  = Conv2D(filters=32, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter1_u )
+    iconv1_u  = Conv2D(filters=16, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter1_u )
     pr1_u  = Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), padding="same")(iconv1_u )
 
     ############################## fuse ###############################
@@ -525,41 +525,41 @@ def model_overall_shared(input_shape):
     ############################## fuse ###############################
     ############################## fuse ###############################
 
-    upconv5 = Conv2DTranspose(filters=512, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), input_shape=(7, 10, 1024), padding="same")(conv6b)
+    upconv5 = Conv2DTranspose(filters=256, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), input_shape=(7, 10, 1024), padding="same")(conv6b)
     pr6 = Conv2D(filters=3, kernel_size=(3,3), strides=(1,1), padding="same")(conv6b)
     pr6b = Activation(K.softmax)(pr6)
     pr6up = UpSampling2D(size=(2,2))(pr6)
     inter5 = concatenate([upconv5, conv5b, pr6up], axis=3)
 
-    iconv5 = Conv2D(filters=512, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter5)
+    iconv5 = Conv2D(filters=256, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter5)
     pr5 = Conv2D(filters=3, kernel_size=(3,3), strides=(1,1), padding="same")(iconv5)
     pr5b = Activation(K.softmax)(pr5)
     pr5up = UpSampling2D(size=(2,2))(pr5)
-    upconv4 = Conv2DTranspose(filters=256, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv5)
+    upconv4 = Conv2DTranspose(filters=128, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv5)
     inter4 = concatenate([upconv4, conv4b, pr5up], axis=3)
 
-    iconv4 = Conv2D(filters=256, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter4)
+    iconv4 = Conv2D(filters=128, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter4)
     pr4 = Conv2D(filters=3, kernel_size=(3,3), strides=(1,1), padding="same")(iconv4)
     pr4b = Activation(K.softmax)(pr4)
     pr4up = UpSampling2D(size=(2,2))(pr4)
-    upconv3 = Conv2DTranspose(filters=128, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv4)
+    upconv3 = Conv2DTranspose(filters=64, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv4)
     inter3 = concatenate([upconv3, conv3b, pr4up], axis=3)
 
-    iconv3 = Conv2D(filters=128, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter3)
+    iconv3 = Conv2D(filters=64, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter3)
     pr3 = Conv2D(filters=3, kernel_size=(3,3), strides=(1,1), padding="same")(iconv3)
     pr3b = Activation(K.softmax)(pr3)
     pr3up = UpSampling2D(size=(2,2))(pr3)
-    upconv2 = Conv2DTranspose(filters=64, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv3)
+    upconv2 = Conv2DTranspose(filters=32, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv3)
     inter2 = concatenate([upconv2, conv2, pr3up], axis=3)
 
-    iconv2 = Conv2D(filters=64, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter2)
+    iconv2 = Conv2D(filters=32, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter2)
     pr2 = Conv2D(filters=3, kernel_size=(3,3), strides=(1,1), padding="same")(iconv2)
     pr2b = Activation(K.softmax)(pr2)
     pr2up = UpSampling2D(size=(2,2))(pr2)
-    upconv1 = Conv2DTranspose(filters=32, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv2)
+    upconv1 = Conv2DTranspose(filters=16, kernel_size=(4,4), strides=(2,2), dilation_rate=(2,2), padding="same")(iconv2)
     inter1 = concatenate([upconv1, conv1, pr2up], axis=3)
 
-    iconv1 = Conv2D(filters=32, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter1)
+    iconv1 = Conv2D(filters=16, kernel_size=(3,3), strides=(1,1), padding="same", activation='relu')(inter1)
     pr1 = Conv2D(filters=3, kernel_size=(3,3), strides=(1,1), padding="same", activation='softmax')(iconv1)
 
     far_1 = core.Lambda(lambda x: x[:, :, :, 0:1])(pr1)
@@ -567,19 +567,19 @@ def model_overall_shared(input_shape):
     uncondrolled_1 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr1)
     far_2 = core.Lambda(lambda x: x[:, :, :, 0:1])(pr2b)
     close_2 = core.Lambda(lambda x: x[:, :, :, 1:2])(pr2b)
-    uncondrolled_2 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr2)
+    uncondrolled_2 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr2b)
     far_3 = core.Lambda(lambda x: x[:, :, :, 0:1])(pr3b)
     close_3 = core.Lambda(lambda x: x[:, :, :, 1:2])(pr3b)
-    uncondrolled_3 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr3)
+    uncondrolled_3 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr3b)
     far_4 = core.Lambda(lambda x: x[:, :, :, 0:1])(pr4b)
     close_4 = core.Lambda(lambda x: x[:, :, :, 1:2])(pr4b)
-    uncondrolled_4 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr4)
+    uncondrolled_4 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr4b)
     far_5 = core.Lambda(lambda x: x[:, :, :, 0:1])(pr5b)
     close_5 = core.Lambda(lambda x: x[:, :, :, 1:2])(pr5b)
-    uncondrolled_5 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr5)
+    uncondrolled_5 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr5b)
     far_6 = core.Lambda(lambda x: x[:, :, :, 0:1])(pr6b)
     close_6 = core.Lambda(lambda x: x[:, :, :, 1:2])(pr6b)
-    uncondrolled_6 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr6)
+    uncondrolled_6 = core.Lambda(lambda x: x[:, :, :, 2:3])(pr6b)
 
     far_p1 = Multiply()([far_1, pr1_f])
     close_p1 = Multiply()([close_1, pr1_c])
@@ -612,9 +612,7 @@ def model_overall_shared(input_shape):
     pre6 = Add()([far_p6, close_p6, uncondrolled_p6])
 
 
-    model = Model(inputs=a, outputs=[pr6_c, pr5_c, pr4_c, pr3_c, pr2_c, pr1_c,
-                                     pr6_f, pr5_f, pr4_f, pr3_f, pr2_f, pr1_f,
-                                     pre6, pre5, pre4, pre3, pre2, pre1])
+    model = Model(inputs=a, outputs=[pre6, pre5, pre4, pre3, pre2, pre1])
 
     return model
 
