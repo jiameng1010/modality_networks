@@ -53,7 +53,7 @@ def showImange(x, yy, depth, batchSize):
         imgtoshow = Image.fromarray(np.uint8(img[i]), 'RGB')
         return imgtoshow
 
-def save_result():
+def save_result_old():
     path = '/media/mjia/Data/SUN3D/train/'
     index = np.load('index_train.npy')
     ([x, x1, x2], y1) = utility.loadData_judgement(index, 50, 15, path, image_mean)
@@ -76,8 +76,6 @@ def save_result():
         image_to_save[:, 320:420, :] = mult
 
         image_to_save[:, 420:740, :] = cv2.applyColorMap(np.array(40*depth[5][i, :, :, 0], dtype = np.uint8), cv2.COLORMAP_JET)
-        #image_to_save[:, 420:740, 1] = 25 * depth[5][i, :, :, 0]
-        #image_to_save[:, 420:740, 2] = 25 * depth[5][i, :, :, 0]
 
         image_to_save[:, 740:840, :] = plus
 
@@ -88,27 +86,80 @@ def save_result():
         image_to_save[:, 1160:1260, :] = mult
 
         image_to_save[:, 1260:1580, :] = cv2.applyColorMap(np.array(40*depth[11][i, :, :, 0], dtype = np.uint8), cv2.COLORMAP_JET)
-        #image_to_save[:, 1260:1580, 1] = 25 * depth[11][i, :, :, 0]
-        #image_to_save[:, 1260:1580, 2] = 25 * depth[11][i, :, :, 0]
 
         image_to_save[:, 1580:1680, :] = equal
 
         image_to_save[:, 1680:2000, :] = cv2.applyColorMap(np.array(40*depth[17][i, :, :, 0], dtype = np.uint8), cv2.COLORMAP_JET)
-        #image_to_save[:, 1680:2000, 1] = 25 * depth[17][i, :, :, 0]
-        #image_to_save[:, 1680:2000, 2] = 25 * depth[17][i, :, :, 0]
 
         image_to_save[:, 2000:2100, :] = empty
 
         image_to_save[:, 2100:2420, :] = cv2.applyColorMap(np.array(40*y1[i, :, :, 0], dtype = np.uint8), cv2.COLORMAP_JET)
-        #image_to_save[:, 2100:2420, 1] = 25 * y1[i, :, :, 0]
-        #image_to_save[:, 2100:2420, 2] = 25 * y1[i, :, :, 0]
 
         image_to_save[:, 2420:2740, :] = 255*x[i, ::2, ::2, 0:3] + image_mean[::2, ::2, :]
 
         img[(274*i):(274*i+224), :, :] = image_to_save
         img[(274*i+224):(274*i+274), :, :] = 255*sep
 
-    cv2.imwrite('result.jpg', img)
+    cv2.imwrite('./reduced_supervised_tri/epoch_4.jpg', img)
+
+def save_result():
+    path = '/media/mjia/Data/SUN3D/train/'
+    index = np.load('index_train.npy')
+    ([x, x1, x2], y1) = utility.loadData_judgement(index, 50, 15, path, image_mean)
+
+    depth = model_overall.predict_on_batch(x)
+    plus = cv2.imread('./draw/plus.jpg')
+    mult = cv2.imread('./draw/multiply.jpg')
+    equal = cv2.imread('./draw/equal.jpg')
+    empty = cv2.imread('./draw/empty.jpg')
+
+    sep = np.ones(shape=(50, 3580, 3))
+    img = np.ones(shape=(4110, 3580, 3))
+    for i in range(15):
+        image_to_save = np.zeros(shape=(224, 3580, 3))
+
+        image_to_save[:, 0:320, 0] = 255 * depth[23][i, :, :, 0]
+        image_to_save[:, 0:320, 1] = 255 * depth[23][i, :, :, 0]
+        image_to_save[:, 0:320, 2] = 255 * depth[23][i, :, :, 0]
+
+        image_to_save[:, 320:420, :] = mult
+
+        image_to_save[:, 420:740, :] = cv2.applyColorMap(np.array(40*depth[5][i, :, :, 0], dtype = np.uint8), cv2.COLORMAP_JET)
+
+        image_to_save[:, 740:840, :] = plus
+
+        image_to_save[:, 840:1160, 0] = 255 * (np.ones_like(depth[5][i, :, :, 0]) - depth[23][i, :, :, 0])
+        image_to_save[:, 840:1160, 1] = 255 * (np.ones_like(depth[5][i, :, :, 0]) - depth[23][i, :, :, 0])
+        image_to_save[:, 840:1160, 2] = 255 * (np.ones_like(depth[5][i, :, :, 0]) - depth[23][i, :, :, 0])
+
+        image_to_save[:, 1160:1260, :] = mult
+
+        image_to_save[:, 1260:1580, :] = cv2.applyColorMap(np.array(40*depth[11][i, :, :, 0], dtype = np.uint8), cv2.COLORMAP_JET)
+
+        image_to_save[:, 1580:1680, :] = plus
+
+        image_to_save[:, 1680:2000, 0] = 255 * depth[35][i, :, :, 0]
+        image_to_save[:, 1680:2000, 1] = 255 * depth[35][i, :, :, 0]
+        image_to_save[:, 1680:2000, 2] = 255 * depth[35][i, :, :, 0]
+
+        image_to_save[:, 2000:2100, :] = mult
+
+        image_to_save[:, 2100:2420, :] = cv2.applyColorMap(np.array(40*depth[29][i, :, :, 0], dtype = np.uint8), cv2.COLORMAP_JET)
+
+        image_to_save[:, 2420:2520, :] = equal
+
+        image_to_save[:, 2520:2840, :] = cv2.applyColorMap(np.array(40*depth[17][i, :, :, 0], dtype = np.uint8), cv2.COLORMAP_JET)
+
+        image_to_save[:, 2840:2940, :] = empty
+
+        image_to_save[:, 2940:3260, :] = cv2.applyColorMap(np.array(40*y1[i, :, :, 0], dtype = np.uint8), cv2.COLORMAP_JET)
+
+        image_to_save[:, 3260:3580, :] = 255*x[i, ::2, ::2, 0:3] + image_mean[::2, ::2, :]
+
+        img[(274*i):(274*i+224), :, :] = image_to_save
+        img[(274*i+224):(274*i+274), :, :] = 255*sep
+
+    cv2.imwrite('./reduced_supervised_tri/epoch_5.jpg', img)
 
 
 # initialize the model
@@ -117,21 +168,21 @@ input_shape = (img_rows, img_cols, 6)
 #model_close = model_ini.model_init(input_shape)
 #model_far = model_ini.model_init(input_shape)
 #model_judge = model_ini.model_judgement2()
-model_old = model_ini.model_overall_shared_old(input_shape)
-model_overall = model_ini.model_overall_shared(input_shape)
+model_old = model_ini.model_overall_shared(input_shape)
+model_overall = model_ini.model_overall_shared_show(input_shape)
 
 model_overall.compile(loss=utility.my_loss,
                   metrics=[utility.metric_L1_real],
                   optimizer=keras.optimizers.Adadelta())
 
-model_overall.load_weights('./trained_models/model_epoch_28.hdf5')
-#for iterm in model_old.layers:
-#    if (type(iterm) == keras.layers.Conv2DTranspose):
-#        iterm_name = 'conv2d_transpose_' + str(int(iterm.name.split('_')[-1]) + 15)
-#        model_overall.get_layer(name=iterm_name).set_weights(iterm.get_weights())
-#    if (type(iterm) == keras.layers.Conv2D):
-#        iterm_name = 'conv2d_' + str(int(iterm.name.split('_')[-1]) + 43)
-#        model_overall.get_layer(name=iterm_name).set_weights(iterm.get_weights())
+model_old.load_weights('./trained_models/model_epoch_5.hdf5')
+for iterm in model_old.layers:
+    if (type(iterm) == keras.layers.Conv2DTranspose):
+        iterm_name = 'conv2d_transpose_' + str(int(iterm.name.split('_')[-1]) + 20)
+        model_overall.get_layer(name=iterm_name).set_weights(iterm.get_weights())
+    if (type(iterm) == keras.layers.Conv2D):
+        iterm_name = 'conv2d_' + str(int(iterm.name.split('_')[-1]) + 54)
+        model_overall.get_layer(name=iterm_name).set_weights(iterm.get_weights())
 
 #loss = model.evaluate_generator(utility.data_generator(isTrain = False, isGAN= False, batchSize = 20), steps = 255)
 
