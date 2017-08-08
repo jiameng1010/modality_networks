@@ -159,7 +159,7 @@ def save_result():
         img[(274*i):(274*i+224), :, :] = image_to_save
         img[(274*i+224):(274*i+274), :, :] = 255*sep
 
-    cv2.imwrite('./reduced_supervised_tri/epoch_5.jpg', img)
+    cv2.imwrite('./reduced_supervised_tri/epoch_33.jpg', img)
 
 
 # initialize the model
@@ -175,7 +175,7 @@ model_overall.compile(loss=utility.my_loss,
                   metrics=[utility.metric_L1_real],
                   optimizer=keras.optimizers.Adadelta())
 
-model_old.load_weights('./trained_models/model_epoch_5.hdf5')
+model_old.load_weights('./trained_models/model_epoch_33.hdf5')
 for iterm in model_old.layers:
     if (type(iterm) == keras.layers.Conv2DTranspose):
         iterm_name = 'conv2d_transpose_' + str(int(iterm.name.split('_')[-1]) + 20)

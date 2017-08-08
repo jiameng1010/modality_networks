@@ -390,6 +390,65 @@ def loadData_overall(index, index_begin, batchSize, path, image_mean):
     return (x, y)
 
 
+def loadData_edge(index, index_begin, batchSize, path, image_mean):
+    x = np.empty(shape=(batchSize, 448, 640, 6))
+    yy = np.empty(shape=(448, 640))
+    edge = np.empty(shape=(448, 640))
+    y1 = np.empty(shape=(batchSize, 224, 320, 1))
+    y2 = np.empty(shape=(batchSize, 112, 160, 1))
+    y3 = np.empty(shape=(batchSize, 56, 80, 1))
+    y4 = np.empty(shape=(batchSize, 28, 40, 1))
+    y5 = np.empty(shape=(batchSize, 14, 20, 1))
+    y6 = np.empty(shape=(batchSize, 7, 10, 1))
+    y1e = np.empty(shape=(batchSize, 224, 320, 1))
+    y2e = np.empty(shape=(batchSize, 112, 160, 1))
+    y3e = np.empty(shape=(batchSize, 56, 80, 1))
+    y4e = np.empty(shape=(batchSize, 28, 40, 1))
+    y5e = np.empty(shape=(batchSize, 14, 20, 1))
+    y6e = np.empty(shape=(batchSize, 7, 10, 1))
+    y1ne = np.empty(shape=(batchSize, 224, 320, 1))
+    y2ne = np.empty(shape=(batchSize, 112, 160, 1))
+    y3ne = np.empty(shape=(batchSize, 56, 80, 1))
+    y4ne = np.empty(shape=(batchSize, 28, 40, 1))
+    y5ne = np.empty(shape=(batchSize, 14, 20, 1))
+    y6ne = np.empty(shape=(batchSize, 7, 10, 1))
+    for i in range(batchSize):
+        number_of_file = str(index[index_begin+i][0])
+        filename = path + number_of_file.zfill(7) + '.mat'
+        xx = sio.loadmat(filename)
+        x[i,:,:,0:3] = xx['Data']['image'][0][0][0][0][16:464,:,:] - image_mean      #for evaluate the monocular
+        x[i,:,:,3:6] = xx['Data']['image'][0][0][0][1][16:464,:,:] - image_mean
+        yy = xx['Data']['depth'][0][0][0][0][16:464,:]
+        yy = yy.astype('float32')
+        edge = xx['Data']['mask'][0][0][16:464,:]
+        nonedge = np.ones_like(edge) - edge
+        yye = np.multiply(yy, edge)
+        yyne = np.multiply(yy, nonedge)
+        y1[i, :, :, 0] = pyrDown(yy)
+        y2[i, :, :, 0] = pyrDown(y1[i, :, :, 0])
+        y3[i, :, :, 0] = pyrDown(y2[i, :, :, 0])
+        y4[i, :, :, 0] = pyrDown(y3[i, :, :, 0])
+        y5[i, :, :, 0] = pyrDown(y4[i, :, :, 0])
+        y6[i, :, :, 0] = pyrDown(y5[i, :, :, 0])
+        y1e[i, :, :, 0] = pyrDown(yye)
+        y2e[i, :, :, 0] = pyrDown(y1e[i, :, :, 0])
+        y3e[i, :, :, 0] = pyrDown(y2e[i, :, :, 0])
+        y4e[i, :, :, 0] = pyrDown(y3e[i, :, :, 0])
+        y5e[i, :, :, 0] = pyrDown(y4e[i, :, :, 0])
+        y6e[i, :, :, 0] = pyrDown(y5e[i, :, :, 0])
+        y1ne[i, :, :, 0] = pyrDown(yyne)
+        y2ne[i, :, :, 0] = pyrDown(y1ne[i, :, :, 0])
+        y3ne[i, :, :, 0] = pyrDown(y2ne[i, :, :, 0])
+        y4ne[i, :, :, 0] = pyrDown(y3ne[i, :, :, 0])
+        y5ne[i, :, :, 0] = pyrDown(y4ne[i, :, :, 0])
+        y6ne[i, :, :, 0] = pyrDown(y5ne[i, :, :, 0])
+
+    x = x.astype('float32')
+    x /= 255
+    y = [y6e, y5e, y4e, y3e, y2e, y1e, y6ne, y5ne, y4ne, y3ne, y2ne, y1ne, y6, y5, y4, y3, y2, y1]
+
+    return (x,y)
+
 def data_generator(isTrain = True, isGAN = True, close_far_all = 0, batchSize = 10):
     image_mean = np.zeros(shape=(448, 640, 3))
     image_mean[:,:,0] = 114*np.ones(shape=(448, 640))
@@ -422,6 +481,8 @@ def data_generator(isTrain = True, isGAN = True, close_far_all = 0, batchSize = 
                 yield (x, [y_close[0], y_close[1], y_close[2], y_close[3], y_close[4], y_close[5],
                            y_far[0], y_far[1], y_far[2], y_far[3], y_far[4], y_far[5],
                            y[0], y[1], y[2], y[3], y[4], y[5]])
+            elif close_far_all == 4:
+                yield loadData_edge(index, i, batchSize, path, image_mean)
 
         i = i + batchSize
 
